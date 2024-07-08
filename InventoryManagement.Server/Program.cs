@@ -1,13 +1,16 @@
+using InventoryManagement.Server.Context;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+AddServices();
+ConfigureSwagger();
+AddDbContext();
 
 var app = builder.Build();
+
+app.UseCors();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -28,3 +31,31 @@ app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 app.Run();
+
+void AddServices()
+{
+    builder.Services.AddControllers();
+    builder.Services.AddLogging();
+    builder.Services.AddEndpointsApiExplorer();
+    // Add CORS services
+    builder.Services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(builder =>
+        {
+            builder.WithOrigins("https://localhost:5173")
+                   .WithHeaders(HeaderNames.ContentType, "x-custom-header")
+                   .WithMethods("PUT", "DELETE", "GET", "PATCH", "POST");
+        });
+    });
+}
+
+void ConfigureSwagger()
+{
+    builder.Services.AddSwaggerGen();
+}
+
+void AddDbContext()
+{
+    var connectionString = builder.Configuration.GetConnectionString("DatabaseConnection");
+    builder.Services.AddDbContext<ItemContext>(options => options.UseSqlServer(connectionString));
+}
