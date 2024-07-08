@@ -9,5 +9,6 @@
         public int QuantityPerPackage { get; set; }
         public bool ShouldOrder { get; set; }
         public bool IsMaterial { get; set; }
+        public bool IsFoodOrDrink { get; set; }
     }
 }
