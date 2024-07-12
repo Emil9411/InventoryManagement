@@ -74,6 +74,21 @@ namespace InventoryManagement.Server.Restaurant1.Repository
             _logger.LogWarning($"Item with id {id} not found in Restaurant1");
         }
 
+        public Restaurant1Item? ShouldOrderItem(int id, bool shouldOrder)
+        {
+            var item = _context.Restaurant1Items.FirstOrDefault(i => i.Id == id);
+            if (item != null)
+            {
+                item.ShouldOrder = shouldOrder;
+                _context.Restaurant1Items.Update(item);
+                _context.SaveChanges();
+                _logger.LogInformation($"Item with id {id} should order updated in Restaurant1");
+                return item;
+            }
+            _logger.LogWarning($"Item with id {id} not found in Restaurant1");
+            return null;
+        }
+
         public IEnumerable<Restaurant1Item> GetAllItems()
         {
             var items = _context.Restaurant1Items.ToList();

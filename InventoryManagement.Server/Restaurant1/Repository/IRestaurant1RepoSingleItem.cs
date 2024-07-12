@@ -9,5 +9,6 @@ namespace InventoryManagement.Server.Restaurant1.Repository
         void CreateItem(Restaurant1Item item);
         void UpdateItem(Restaurant1Item item);
         void DeleteItem(int id);
+        Restaurant1Item? ShouldOrderItem(int id, bool shouldOrder);
     }
 }
