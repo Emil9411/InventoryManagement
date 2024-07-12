@@ -64,4 +64,5 @@ void AddDbContext()
 {
     var connectionString = builder.Configuration.GetConnectionString("DatabaseConnection");
     builder.Services.AddDbContext<ItemContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(connectionString));
 }
