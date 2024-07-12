@@ -2,7 +2,7 @@
 using InventoryManagement.Server.Generics.Repository;
 using InventoryManagement.Server.Model.Restaurants;
 
-namespace InventoryManagement.Server.Restaurant2
+namespace InventoryManagement.Server.Inventories.Restaurant2
 {
     public class Restaurant2Repo : GenericRepo<Restaurant2Item>
     {

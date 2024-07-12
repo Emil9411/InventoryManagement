@@ -3,7 +3,7 @@ using InventoryManagement.Server.Generics.Repository;
 using InventoryManagement.Server.Model.Restaurants;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InventoryManagement.Server.Restaurant2
+namespace InventoryManagement.Server.Inventories.Restaurant2
 {
     [ApiController]
     [Route("api/restaurant2/items")]
