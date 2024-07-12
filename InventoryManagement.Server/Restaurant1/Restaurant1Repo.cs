@@ -1,6 +1,6 @@
 ﻿using InventoryManagement.Server.Context;
+using InventoryManagement.Server.Generics.Repository;
 using InventoryManagement.Server.Model.Restaurants;
-using InventoryManagement.Server.Restaurant1.Repository;
 
 namespace InventoryManagement.Server.Restaurant1
 {

@@ -1,8 +1,8 @@
-﻿using InventoryManagement.Server.Model;
-using InventoryManagement.Server.Restaurant1.Repository;
+﻿using InventoryManagement.Server.Generics.Repository;
+using InventoryManagement.Server.Model;
 using Microsoft.AspNetCore.Mvc;
 
-namespace InventoryManagement.Server.Restaurant1.Controller
+namespace InventoryManagement.Server.Generics.Controller
 {
     [ApiController]
     [Route("api/[controller]")]

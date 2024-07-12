@@ -1,6 +1,6 @@
-﻿using InventoryManagement.Server.Model.Restaurants;
-using InventoryManagement.Server.Restaurant1.Controller;
-using InventoryManagement.Server.Restaurant1.Repository;
+﻿using InventoryManagement.Server.Generics.Controller;
+using InventoryManagement.Server.Generics.Repository;
+using InventoryManagement.Server.Model.Restaurants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Server.Restaurant1

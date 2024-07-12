@@ -1,6 +1,6 @@
 ﻿using InventoryManagement.Server.Model;
 
-namespace InventoryManagement.Server.Restaurant1.Repository
+namespace InventoryManagement.Server.Generics.Repository
 {
     public interface IGenericRepo<T> where T : Item
     {

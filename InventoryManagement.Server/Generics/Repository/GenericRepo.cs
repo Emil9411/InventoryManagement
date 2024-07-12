@@ -2,7 +2,7 @@
 using InventoryManagement.Server.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace InventoryManagement.Server.Restaurant1.Repository
+namespace InventoryManagement.Server.Generics.Repository
 {
     public class GenericRepo<T> : IGenericRepo<T> where T : Item
     {
