@@ -1,6 +1,6 @@
 using InventoryManagement.Server.Context;
+using InventoryManagement.Server.Generics.Repository;
 using InventoryManagement.Server.Model.Restaurants;
-using InventoryManagement.Server.Restaurant1.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 
@@ -40,6 +40,8 @@ void AddServices()
     builder.Services.AddLogging();
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddScoped(typeof(IGenericRepo<Restaurant1Item>), typeof(GenericRepo<Restaurant1Item>));
+    builder.Services.AddScoped(typeof(IGenericRepo<Restaurant2Item>), typeof(GenericRepo<Restaurant2Item>));
+    builder.Services.AddScoped(typeof(IGenericRepo<Restaurant3Item>), typeof(GenericRepo<Restaurant3Item>));
 
     // Add CORS services
     builder.Services.AddCors(options =>
