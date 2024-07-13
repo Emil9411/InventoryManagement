@@ -19,6 +19,9 @@ namespace InventoryManagement.Server.Authorization.Seeder
             var tAdmin = CreateAdminRole(_roleManager);
             tAdmin.Wait();
 
+            var tManager = CreateManagerRole(_roleManager);
+            tManager.Wait();
+
             var tUser = CreateUserRole(_roleManager);
             tUser.Wait();
         }
@@ -33,6 +36,12 @@ namespace InventoryManagement.Server.Authorization.Seeder
         {
             var tUser = CreateTestUserIfNotExists();
             tUser.Wait();
+        }
+
+        public void AddManager()
+        {
+            var tManager = CreateManagerIfNotExists();
+            tManager.Wait();
         }
 
         private async Task CreateAdminIfNotExists()
@@ -65,6 +74,22 @@ namespace InventoryManagement.Server.Authorization.Seeder
             }
         }
 
+        private async Task CreateManagerIfNotExists()
+        {
+            var managerInDb = await _userManager.FindByEmailAsync("manager@manager.com");
+            if (managerInDb == null)
+            {
+                var manager = new AppUser { UserName = "manager", Email = "manager@manager.com" };
+                var managerCreated = await _userManager.CreateAsync(manager, "manager123");
+
+                if (managerCreated.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(manager, "Manager");
+                }
+            }
+        }
+
+
         private static async Task CreateAdminRole(RoleManager<IdentityRole> roleManager)
         {
             await roleManager.CreateAsync(new IdentityRole("Admin"));
@@ -73,6 +98,11 @@ namespace InventoryManagement.Server.Authorization.Seeder
         private static async Task CreateUserRole(RoleManager<IdentityRole> roleManager)
         {
             await roleManager.CreateAsync(new IdentityRole("User"));
+        }
+
+        private static async Task CreateManagerRole(RoleManager<IdentityRole> roleManager)
+        {
+            await roleManager.CreateAsync(new IdentityRole("Manager"));
         }
     }
 }
