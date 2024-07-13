@@ -1,5 +1,6 @@
 ﻿using InventoryManagement.Server.Generics.Repository;
 using InventoryManagement.Server.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Server.Generics.Controller
@@ -17,7 +18,7 @@ namespace InventoryManagement.Server.Generics.Controller
             _logger = logger;
         }
 
-        [HttpGet("getall")]
+        [HttpGet("getall"), Authorize(Roles = "Admin, Manager, User")]
         public async Task<IActionResult> GetAllItems()
         {
             var items = await _genericRepo.GetAllItemsAsync();
@@ -30,7 +31,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return NotFound("No items found");
         }
 
-        [HttpGet("get/{id}")]
+        [HttpGet("get/{id}"), Authorize(Roles = "Admin, Manager, User")]
         public async Task<IActionResult> GetItemById(int id)
         {
             var item = await _genericRepo.GetItemByIdAsync(id);
@@ -43,7 +44,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return NotFound($"Item with id {id} not found");
         }
 
-        [HttpGet("getbyname/{name}")]
+        [HttpGet("getbyname/{name}"), Authorize(Roles = "Admin, Manager, User")]
         public async Task<IActionResult> GetItemByName(string name)
         {
             var item = await _genericRepo.GetItemByNameAsync(name);
@@ -56,7 +57,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return NotFound($"Item with name {name} not found");
         }
 
-        [HttpPost("create")]
+        [HttpPost("create"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> CreateItem([FromBody] T item)
         {
             if (item == null)
@@ -69,7 +70,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return Ok($"Item with id {item.Id} created");
         }
 
-        [HttpPut("update")]
+        [HttpPut("update"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> UpdateItem([FromBody] T item)
         {
             if (item == null)
@@ -82,7 +83,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return Ok($"Item with id {item.Id} updated");
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("delete/{id}"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> DeleteItem(int id)
         {
             await _genericRepo.DeleteItemAsync(id);
@@ -90,7 +91,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return Ok($"Item with id {id} deleted");
         }
 
-        [HttpGet("getmaterialitems")]
+        [HttpGet("getmaterialitems"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAllMaterialItems()
         {
             var items = await _genericRepo.GetAllMaterialItemsAsync();
@@ -103,7 +104,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return NotFound("No material items found");
         }
 
-        [HttpGet("getnonmaterialitems")]
+        [HttpGet("getnonmaterialitems"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAllNonMaterialItems()
         {
             var items = await _genericRepo.GetAllNonMaterialItemsAsync();
@@ -116,7 +117,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return NotFound("No non-material items found");
         }
 
-        [HttpGet("getitemstoorder")]
+        [HttpGet("getitemstoorder"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAllItemsToOrder()
         {
             var items = await _genericRepo.GetAllItemsToOrderAsync();
@@ -129,7 +130,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return NotFound("No items to order found");
         }
 
-        [HttpGet("getfoodordrinkitems")]
+        [HttpGet("getfoodordrinkitems"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAllFoodOrDrinkItems()
         {
             var items = await _genericRepo.GetAllFoodOrDrinkItemsAsync();
@@ -142,7 +143,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return NotFound("No food or drink items found");
         }
 
-        [HttpGet("getnonfoodordrinkitems")]
+        [HttpGet("getnonfoodordrinkitems"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAllNonFoodOrDrinkItems()
         {
             var items = await _genericRepo.GetAllNonFoodOrDrinkItemsAsync();
@@ -155,7 +156,7 @@ namespace InventoryManagement.Server.Generics.Controller
             return NotFound("No non-food or drink items found");
         }
 
-        [HttpGet("shouldorder/{id}/{shouldOrder}")]
+        [HttpGet("shouldorder/{id}/{shouldOrder}"), Authorize(Roles = "Admin, Manager, User")]
         public async Task<IActionResult> ShouldOrderItem(int id, bool shouldOrder)
         {
             var item = await _genericRepo.UpdateShouldOrderStatusAsync(id, shouldOrder);
