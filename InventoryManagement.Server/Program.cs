@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
@@ -44,6 +43,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
@@ -70,8 +71,8 @@ void AddServices()
         options.AddDefaultPolicy(builder =>
         {
             builder.WithOrigins("https://localhost:5173")
-                   .WithHeaders(HeaderNames.ContentType, "x-custom-header")
-                   .WithMethods("PUT", "DELETE", "GET", "PATCH", "POST");
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
         });
     });
 }
@@ -138,6 +139,7 @@ void AddAuthentication()
         .AddCookie(options =>
         {
             options.Cookie.Name = "Authorization";
+            options.Cookie.HttpOnly = true;
         })
         .AddJwtBearer(options =>
         {
