@@ -150,12 +150,12 @@ namespace InventoryManagement.Server.Authorization.Services
 
         private static AuthResult FailedRegistration(IdentityResult result, string email, string username)
         {
-            var autResult = new AuthResult(false, email, username, "");
+            var authResult = new AuthResult(false, email, username, "");
             foreach (var error in result.Errors)
             {
-                autResult.ErrorMessages.Add(error.Code, error.Description);
+                authResult.ErrorMessages.Add(error.Code, error.Description);
             }
-            return autResult;
+            return authResult;
         }
 
         private static AuthResult InvalidUsername(string username)
