@@ -7,16 +7,10 @@ namespace InventoryManagement.Server.Generics.Controller
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GenericController<T> : ControllerBase where T : Item
+    public class GenericController<T>(IGenericRepo<T> genericRepo, ILogger<GenericController<T>> logger) : ControllerBase where T : Item
     {
-        private readonly IGenericRepo<T> _genericRepo;
-        private readonly ILogger<GenericController<T>> _logger;
-
-        public GenericController(IGenericRepo<T> genericRepo, ILogger<GenericController<T>> logger)
-        {
-            _genericRepo = genericRepo;
-            _logger = logger;
-        }
+        private readonly IGenericRepo<T> _genericRepo = genericRepo;
+        private readonly ILogger<GenericController<T>> _logger = logger;
 
         [HttpGet("getall"), Authorize(Roles = "Admin, Manager, User")]
         public async Task<IActionResult> GetAllItems()

@@ -7,10 +7,7 @@ namespace InventoryManagement.Server.Inventories.Restaurant2
 {
     [ApiController]
     [Route("api/restaurant2/items")]
-    public class Restaurant2Controller : GenericController<Restaurant2Item>
+    public class Restaurant2Controller(IGenericRepo<Restaurant2Item> genericRepo, ILogger<GenericController<Restaurant2Item>> logger) : GenericController<Restaurant2Item>(genericRepo, logger)
     {
-        public Restaurant2Controller(IGenericRepo<Restaurant2Item> genericRepo, ILogger<GenericController<Restaurant2Item>> logger) : base(genericRepo, logger)
-        {
-        }
     }
 }
