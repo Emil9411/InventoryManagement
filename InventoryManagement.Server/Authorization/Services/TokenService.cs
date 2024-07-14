@@ -1,7 +1,6 @@
 ﻿using InventoryManagement.Server.Authorization.Models;
 using InventoryManagement.Server.Model;
 using Microsoft.IdentityModel.Tokens;
-using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -81,7 +80,7 @@ namespace InventoryManagement.Server.Authorization.Services
                 {
                     new(JwtRegisteredClaimNames.Sub, user.Id),
                     new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)),
+                    new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString()),
                     new(ClaimTypes.Name, user.UserName),
                     new(ClaimTypes.Email, user.Email)
                 };
