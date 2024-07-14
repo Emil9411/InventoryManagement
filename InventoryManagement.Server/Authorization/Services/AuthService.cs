@@ -108,7 +108,7 @@ namespace InventoryManagement.Server.Authorization.Services
             }
         }
 
-        public async Task<AuthResult> ChangeEmailAsync(string email, string newEmail)
+        public async Task<AuthResult> DeleteUser(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
@@ -117,17 +117,16 @@ namespace InventoryManagement.Server.Authorization.Services
                 return InvalidEmail(email);
             }
 
-            user.Email = newEmail;
-            var result = await _userManager.UpdateAsync(user);
+            var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
             {
-                _logger.LogInformation($"AuthService: Email for user with email {email} changed successfully");
-                return new AuthResult(true, newEmail, user?.UserName ?? "", "");
+                _logger.LogInformation($"AuthService: User with email {email} deleted successfully");
+                return new AuthResult(true, email, user.UserName, "");
             }
             else
             {
-                _logger.LogError($"AuthService: Error changing email for user with email {email}");
-                return FailedRegistration(result, email, user?.UserName ?? "");
+                _logger.LogError($"AuthService: Error deleting user with email {email}");
+                return FailedRegistration(result, email, user.UserName);
             }
         }
 
