@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Server.Authorization.Models;
+using InventoryManagement.Server.Context;
 using InventoryManagement.Server.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -13,13 +14,15 @@ namespace InventoryManagement.Server.Authorization.Services
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthService> _logger;
+        private readonly VerifCodesContext _verifCodesContext;
 
-        public AuthService(UserManager<AppUser> userManager, ITokenService tokenService, IConfiguration configuration, ILogger<AuthService> logger)
+        public AuthService(UserManager<AppUser> userManager, ITokenService tokenService, IConfiguration configuration, ILogger<AuthService> logger, VerifCodesContext verifCodesContext)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _configuration = configuration;
             _logger = logger;
+            _verifCodesContext = verifCodesContext;
         }
 
         public async Task<AuthResult> RegisterAsync(string email, string username, string password, string role)
@@ -145,6 +148,36 @@ namespace InventoryManagement.Server.Authorization.Services
             }, out SecurityToken validatedToken);
 
             return (JwtSecurityToken)validatedToken;
+        }
+
+        public async Task<bool> VerifyEmail(string userId, string verificationCode)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                _logger.LogError($"AuthService: User with id {userId} not found");
+                return false;
+            }
+            if (!string.IsNullOrEmpty(verificationCode))
+            {
+                var verifCode = _verifCodesContext.VerificationCodes.FirstOrDefault(vc => vc.UserId == user.Id);
+                if (verifCode == null)
+                {
+                    _logger.LogError($"AuthService: Verification code for user with id {userId} not found");
+                    return false;
+                }
+                if (verifCode.Code == verificationCode)
+                {
+                    _verifCodesContext.VerificationCodes.Remove(verifCode);
+                    await _verifCodesContext.SaveChangesAsync();
+                    user.EmailConfirmed = true;
+                    await _userManager.UpdateAsync(user);
+                    _logger.LogInformation($"AuthService: Verification code for user with id {userId} verified successfully");
+                    return true;
+                }
+            }
+            _logger.LogError($"AuthService: Verification code for user with id {userId} not verified");
+            return false;
         }
 
         private static AuthResult FailedRegistration(IdentityResult result, string email, string username)
