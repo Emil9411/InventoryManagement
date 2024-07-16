@@ -22,10 +22,10 @@ namespace InventoryManagement.Server.Generics.Repository
             var item = await _dbSet.FirstOrDefaultAsync(i => i.Id == id);
             if (item != null)
             {
-                _logger.LogInformation($"Item with id {id} found in Restaurant1");
+                _logger.LogInformation($"Item with id {id} found");
                 return item;
             }
-            _logger.LogWarning($"Item with id {id} not found in Restaurant1");
+            _logger.LogWarning($"Item with id {id} not found");
             return null;
         }
 
@@ -34,10 +34,10 @@ namespace InventoryManagement.Server.Generics.Repository
             var item = await _dbSet.FirstOrDefaultAsync(i => i.Name == name);
             if (item != null)
             {
-                _logger.LogInformation($"Item with name {name} found in Restaurant1");
+                _logger.LogInformation($"Item with name {name} found");
                 return item;
             }
-            _logger.LogWarning($"Item with name {name} not found in Restaurant1");
+            _logger.LogWarning($"Item with name {name} not found");
             return null;
         }
 
@@ -45,24 +45,24 @@ namespace InventoryManagement.Server.Generics.Repository
         {
             if (item == null)
             {
-                _logger.LogError("Item is null in Restaurant1");
+                _logger.LogError("Item is null");
                 return;
             }
             await _dbSet.AddAsync(item);
             await _context.SaveChangesAsync();
-            _logger.LogInformation($"Item with id {item.Id} created in Restaurant1");
+            _logger.LogInformation($"Item with id {item.Id} created");
         }
 
         public async Task UpdateItemAsync(T item)
         {
             if (item == null)
             {
-                _logger.LogError("Item is null in Restaurant1");
+                _logger.LogError("Item is null");
                 return;
             }
             await _dbSet.AddAsync(item);
             await _context.SaveChangesAsync();
-            _logger.LogInformation($"Item with id {item.Id} updated in Restaurant1");
+            _logger.LogInformation($"Item with id {item.Id} updated");
         }
 
         public async Task DeleteItemAsync(int id)
@@ -72,11 +72,11 @@ namespace InventoryManagement.Server.Generics.Repository
             {
                 _dbSet.Remove(item);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation($"Item with id {id} deleted in Restaurant1");
+                _logger.LogInformation($"Item with id {id} deleted");
             }
             else
             {
-                _logger.LogWarning($"Item with id {id} not found in Restaurant1");
+                _logger.LogWarning($"Item with id {id} not found");
             }
         }
 
@@ -88,10 +88,10 @@ namespace InventoryManagement.Server.Generics.Repository
                 item.ShouldOrder = shouldOrder;
                 _dbSet.Update(item);
                 await _context.SaveChangesAsync();
-                _logger.LogInformation($"Item with id {id} should order status updated in Restaurant1");
+                _logger.LogInformation($"Item with id {id} should order status updated");
                 return item;
             }
-            _logger.LogWarning($"Item with id {id} not found in Restaurant1");
+            _logger.LogWarning($"Item with id {id} not found");
             return null;
         }
 
@@ -100,11 +100,11 @@ namespace InventoryManagement.Server.Generics.Repository
             var items = await _dbSet.ToListAsync();
             if (items.Count == 0)
             {
-                _logger.LogWarning($"No items found in Restaurant1");
+                _logger.LogWarning($"No items found");
             }
             else
             {
-                _logger.LogInformation($"All items in Restaurant1 retrieved");
+                _logger.LogInformation($"All items retrieved");
             }
             return items;
         }
@@ -114,11 +114,11 @@ namespace InventoryManagement.Server.Generics.Repository
             var items = await _dbSet.Where(i => i.IsMaterial).ToListAsync();
             if (items.Count == 0)
             {
-                _logger.LogWarning($"No material items found in Restaurant1");
+                _logger.LogWarning($"No material items found");
             }
             else
             {
-                _logger.LogInformation($"All material items in Restaurant1 retrieved");
+                _logger.LogInformation($"All material items retrieved");
             }
             return items;
         }
@@ -128,11 +128,11 @@ namespace InventoryManagement.Server.Generics.Repository
             var items = await _dbSet.Where(i => !i.IsMaterial).ToListAsync();
             if (items.Count == 0)
             {
-                _logger.LogWarning($"No non-material items found in Restaurant1");
+                _logger.LogWarning($"No non-material items found");
             }
             else
             {
-                _logger.LogInformation($"All non-material items in Restaurant1 retrieved");
+                _logger.LogInformation($"All non-material items retrieved");
             }
             return items;
         }
@@ -142,11 +142,11 @@ namespace InventoryManagement.Server.Generics.Repository
             var items = await _dbSet.Where(i => i.ShouldOrder).ToListAsync();
             if (items.Count == 0)
             {
-                _logger.LogWarning($"No items to order found in Restaurant1");
+                _logger.LogWarning($"No items to order found");
             }
             else
             {
-                _logger.LogInformation($"All items to order in Restaurant1 retrieved");
+                _logger.LogInformation($"All items to order retrieved");
             }
             return items;
         }
@@ -156,11 +156,11 @@ namespace InventoryManagement.Server.Generics.Repository
             var items = await _dbSet.Where(i => i.IsFoodOrDrink).ToListAsync();
             if (items.Count == 0)
             {
-                _logger.LogWarning($"No food or drink items found in Restaurant1");
+                _logger.LogWarning($"No food or drink items found");
             }
             else
             {
-                _logger.LogInformation($"All food or drink items in Restaurant1 retrieved");
+                _logger.LogInformation($"All food or drink items retrieved");
             }
             return items;
         }
@@ -170,11 +170,11 @@ namespace InventoryManagement.Server.Generics.Repository
             var items = await _dbSet.Where(i => !i.IsFoodOrDrink).ToListAsync();
             if (items.Count == 0)
             {
-                _logger.LogWarning($"No non-food or drink items found in Restaurant1");
+                _logger.LogWarning($"No non-food or drink items found");
             }
             else
             {
-                _logger.LogInformation($"All non-food or drink items in Restaurant1 retrieved");
+                _logger.LogInformation($"All non-food or drink items retrieved");
             }
             return items;
         }
