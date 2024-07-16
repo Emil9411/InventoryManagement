@@ -49,7 +49,7 @@ namespace InventoryManagement.Server.Authorization.Seeder
             var adminInDb = await _userManager.FindByEmailAsync("admin@admin.com");
             if (adminInDb == null)
             {
-                var admin = new AppUser { UserName = "admin", Email = "admin@admin.com" };
+                var admin = new AppUser { UserName = "admin", Email = "admin@admin.com", EmailConfirmed = true };
                 var adminCreated = await _userManager.CreateAsync(admin, "admin123");
 
                 if (adminCreated.Succeeded)
@@ -64,7 +64,7 @@ namespace InventoryManagement.Server.Authorization.Seeder
             var userInDb = await _userManager.FindByEmailAsync("test@test.com");
             if (userInDb == null)
             {
-                var user = new AppUser { UserName = "test", Email = "test@test.com" };
+                var user = new AppUser { UserName = "test", Email = "test@test.com", EmailConfirmed = true };
                 var userCreated = await _userManager.CreateAsync(user, "test123");
 
                 if (userCreated.Succeeded)
@@ -79,7 +79,7 @@ namespace InventoryManagement.Server.Authorization.Seeder
             var managerInDb = await _userManager.FindByEmailAsync("manager@manager.com");
             if (managerInDb == null)
             {
-                var manager = new AppUser { UserName = "manager", Email = "manager@manager.com" };
+                var manager = new AppUser { UserName = "manager", Email = "manager@manager.com", EmailConfirmed = true };
                 var managerCreated = await _userManager.CreateAsync(manager, "manager123");
 
                 if (managerCreated.Succeeded)
