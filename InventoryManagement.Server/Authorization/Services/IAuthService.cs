@@ -10,5 +10,6 @@ namespace InventoryManagement.Server.Authorization.Services
         Task<AuthResult> ChangePasswordAsync(string email, string currentPassword, string newPassword);
         Task<AuthResult> DeleteUser(string email);
         JwtSecurityToken Verify(string token);
+        Task<bool> VerifyEmail(string userId, string verificationCode);
     }
 }
