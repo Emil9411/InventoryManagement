@@ -60,6 +60,7 @@ void AddServices()
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<IEmailSender, EmailSender>();
     builder.Services.AddScoped<AuthSeeder>();
     builder.Services.AddScoped(typeof(IGenericRepo<Restaurant1Item>), typeof(GenericRepo<Restaurant1Item>));
     builder.Services.AddScoped(typeof(IGenericRepo<Restaurant2Item>), typeof(GenericRepo<Restaurant2Item>));
@@ -82,6 +83,7 @@ void AddDbContext()
     var connectionString = builder.Configuration.GetConnectionString("DatabaseConnection");
     builder.Services.AddDbContext<ItemContext>(options => options.UseSqlServer(connectionString));
     builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddDbContext<VerifCodesContext>(options => options.UseSqlServer(connectionString));
 }
 
 void ConfigureSwagger()
