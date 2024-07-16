@@ -1,11 +1,10 @@
-﻿using InventoryManagement.Server.Authorization.Models;
-using InventoryManagement.Server.Authorization.Requests;
+﻿using InventoryManagement.Server.Authorization.Requests;
 using InventoryManagement.Server.Authorization.Responses;
 using InventoryManagement.Server.Authorization.Services;
+using InventoryManagement.Server.Model;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
-using System.Net.Mail;
 
 namespace InventoryManagement.Server.Authorization.Controller
 {
@@ -16,16 +15,20 @@ namespace InventoryManagement.Server.Authorization.Controller
         private readonly IAuthService _authService;
         private readonly ILogger<AuthController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IEmailSender _emailSender;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AuthController(IAuthService authService, ILogger<AuthController> logger, IConfiguration configuration)
+        public AuthController(IAuthService authService, ILogger<AuthController> logger, IConfiguration configuration, IEmailSender emailSender, UserManager<AppUser> userManager)
         {
             _authService = authService;
             _logger = logger;
             _configuration = configuration;
+            _emailSender = emailSender;
+            _userManager = userManager;
         }
 
         [HttpPost("register"), Authorize(Roles = "Admin, Manager")]
-        public async Task<IActionResult> Registration(RegistrationRequest request)
+        public async Task<IActionResult> Registration([FromBody] RegistrationRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -41,13 +44,34 @@ namespace InventoryManagement.Server.Authorization.Controller
                 return BadRequest(result.ErrorMessages);
             }
 
+            var verificationCode = _emailSender.GenerateVerificationCode();
+            _emailSender.SaveVerificationCode(result.Email, verificationCode);
+            _emailSender.SendEmail(result.Username, result.Email, "Email Verification", "Please verify your email address", verificationCode);
+
             _logger.LogInformation($"AuthController: User with email {result.Email} and username {result.Username} registered successfully");
-            SendEmail(result.Email, "Registration successful", "You have successfully registered");
             return CreatedAtAction(nameof(Registration), new AuthResponse(result.Email, result.Username));
         }
 
+        [HttpPost("verify/{userId}"), Authorize(Roles = "Admin, Manager, User")]
+        public async Task<IActionResult> VerifyEmail(string userId, [FromBody] string verificationCode)
+        {
+            var result = await _authService.VerifyEmail(userId, verificationCode);
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (!result)
+            {
+                _emailSender.SendEmail(user.UserName, user.Email, "Email Verification", "Email verification failed", null);
+                _logger.LogError($"AuthController: Email verification failed for user with id {userId}");
+                return BadRequest("Email verification failed");
+            }
+
+            _emailSender.SendEmail(user.UserName, user.Email, "Email Verification", "Email verified successfully", null);
+            _logger.LogInformation($"AuthController: Email verified successfully for user with id {userId}");
+            return Ok("Email verified successfully");
+        }
+
         [HttpPost("login")]
-        public async Task<IActionResult> Login(AuthRequest request)
+        public async Task<IActionResult> Login([FromBody] AuthRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -137,7 +161,7 @@ namespace InventoryManagement.Server.Authorization.Controller
             return Ok("Password changed successfully");
         }
 
-        [HttpDelete("delete"), Authorize(Roles = "Admin, Manager")]
+        [HttpDelete("delete/{email}"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> DeleteUser(string email)
         {
             var result = await _authService.DeleteUser(email);
@@ -151,45 +175,5 @@ namespace InventoryManagement.Server.Authorization.Controller
             _logger.LogInformation($"AuthController: DeleteUser: User with email {email} deleted successfully");
             return Ok("User deleted successfully");
         }
-
-        private void SendEmail(string email, string subject, string body)
-        {
-            var smtpSettings = _configuration.GetSection("SmtpSettings").Get<SmtpSettings>();
-            if (smtpSettings == null)
-            {
-                _logger.LogError("AuthController: SendEmail: SmtpSettings configuration section is missing");
-                return;
-            }
-
-            using (var client = new SmtpClient(smtpSettings.Server))
-            {
-                client.Port = smtpSettings.Port;
-                client.EnableSsl = true;
-                client.UseDefaultCredentials = false; // Ensure this is set after setting the Credentials
-                client.Credentials = new NetworkCredential(smtpSettings.SenderEmail, smtpSettings.SenderPassword);
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-
-                var mailMessage = new MailMessage
-                {
-                    From = new MailAddress(smtpSettings.SenderEmail),
-                    Subject = subject,
-                    Body = body,
-                    IsBodyHtml = true,
-                };
-
-                mailMessage.To.Add(email);
-
-                try
-                {
-                    client.Send(mailMessage);
-                    _logger.LogInformation($"AuthController: SendEmail: Email sent to {email}");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"AuthController: SendEmail: Error sending email to {email}");
-                }
-            }
-        }
-
     }
 }
