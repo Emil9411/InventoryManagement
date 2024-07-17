@@ -66,14 +66,14 @@ namespace InventoryManagement.Server.Authorization.Services
             if (user == null)
             {
                 _logger.LogError($"AuthService: User with email {email} not found");
-                return InvalidEmail(email);
+                return BadCredentials();
             }
 
             var validPassword = await _userManager.CheckPasswordAsync(user, password);
             if (!validPassword)
             {
                 _logger.LogError($"AuthService: Invalid password for user with email {email}");
-                return InvalidPassword(email, user?.UserName ?? "");
+                return BadCredentials();
             }
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -88,14 +88,14 @@ namespace InventoryManagement.Server.Authorization.Services
             if (user == null)
             {
                 _logger.LogError($"AuthService: User with email {email} not found");
-                return InvalidEmail(email);
+                return BadCredentials();
             }
 
             var validPassword = await _userManager.CheckPasswordAsync(user, currentPassword);
             if (!validPassword)
             {
                 _logger.LogError($"AuthService: Invalid password for user with email {email}");
-                return InvalidPassword(email, user?.UserName ?? "");
+                return BadCredentials();
             }
 
             var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
@@ -117,7 +117,7 @@ namespace InventoryManagement.Server.Authorization.Services
             if (user == null)
             {
                 _logger.LogError($"AuthService: User with email {email} not found");
-                return InvalidEmail(email);
+                return BadCredentials();
             }
 
             var result = await _userManager.DeleteAsync(user);
@@ -190,24 +190,10 @@ namespace InventoryManagement.Server.Authorization.Services
             return authResult;
         }
 
-        private static AuthResult InvalidUsername(string username)
+        private static AuthResult BadCredentials()
         {
-            var result = new AuthResult(false, "", username, "");
-            result.ErrorMessages.Add("Bad credentials", "Invalid username");
-            return result;
-        }
-
-        private static AuthResult InvalidPassword(string email, string userName)
-        {
-            var result = new AuthResult(false, email, userName, "");
-            result.ErrorMessages.Add("Bad credentials", "Invalid password");
-            return result;
-        }
-
-        private static AuthResult InvalidEmail(string email)
-        {
-            var result = new AuthResult(false, email, "", "");
-            result.ErrorMessages.Add("Bad credentials", "Invalid email");
+            var result = new AuthResult(false, "", "", "");
+            result.ErrorMessages.Add("Bad credentials", "Invalid email and/or password");
             return result;
         }
     }
