@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+ï»¿import { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation } from "react-router-dom";
 import './App.css';
 
@@ -8,15 +8,18 @@ function App() {
 
     return (
         <div className="App">
-            <h1>Raktár Manager 2000</h1>
+            <h1>RaktÃ¡r Manager 2000</h1>
             <div className="buttons">
-                <button>Belépés</button>
-                <button>Regisztráció</button>
-                <button>Minden termék</button>
-                <button>Kivét</button>
-                <button>Bevét</button>
-                <button>Termék hozzáadása</button>
+                <Link to="/login">
+                    <button>BelÃ©pÃ©s</button>
+                </Link>
+                <button>RegisztrÃ¡ciÃ³</button>
+                <button>Minden termÃ©k</button>
+                <button>KivÃ©t</button>
+                <button>BevÃ©t</button>
+                <button>TermÃ©k hozzÃ¡adÃ¡sa</button>
             </div>
+            <Outlet />
         </div>
     );
 }
