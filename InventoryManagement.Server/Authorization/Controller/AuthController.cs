@@ -157,7 +157,19 @@ namespace InventoryManagement.Server.Authorization.Controller
                 return Unauthorized("AuthController: ChangePassword: No cookie found");
             }
 
-            var result = await _authService.ChangePasswordAsync(cookie, request.OldPassword, request.NewPassword);
+            var cookieData = _authService.Verify(cookie);
+
+            if (cookieData == null)
+            {
+                _logger.LogError("AuthController: ChangePassword: Invalid cookie");
+                return Unauthorized("AuthController: ChangePassword: Invalid cookie");
+            }
+
+            var claims = cookieData.Claims.ToList();
+            var email = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value ?? "";
+            var username = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value ?? "";
+
+            var result = await _authService.ChangePasswordAsync(email, request.OldPassword, request.NewPassword);
 
             if (!result.Success)
             {
@@ -165,6 +177,7 @@ namespace InventoryManagement.Server.Authorization.Controller
                 return BadRequest(result.ErrorMessages);
             }
 
+            _emailSender.SendEmail(username, email, "Password Change", "Your password has been changed", null);
             _logger.LogInformation($"AuthController: ChangePassword: Password changed successfully for user with email {result.Email}");
             return Ok("Password changed successfully");
         }
