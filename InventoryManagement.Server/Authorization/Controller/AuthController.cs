@@ -52,7 +52,7 @@ namespace InventoryManagement.Server.Authorization.Controller
             return CreatedAtAction(nameof(Registration), new AuthResponse(result.Email, result.Username));
         }
 
-        [HttpPost("verify/{userId}"), Authorize(Roles = "Admin, Manager, User")]
+        [HttpPost("verify/{userId}")]
         public async Task<IActionResult> VerifyEmail(string userId, [FromBody] string verificationCode)
         {
             var result = await _authService.VerifyEmail(userId, verificationCode);
@@ -85,6 +85,14 @@ namespace InventoryManagement.Server.Authorization.Controller
             {
                 _logger.LogError($"AuthController: Login failed for user with email {request.Email}");
                 return BadRequest(result.ErrorMessages);
+            }
+
+            var user = await _userManager.FindByEmailAsync(request.Email);
+
+            if (!user.EmailConfirmed)
+            {
+                _logger.LogError($"AuthController: Login failed for user with email {request.Email} because email is not verified");
+                return BadRequest("Email is not verified");
             }
 
             Response.Cookies.Append("Authorization", result.Token, new CookieOptions
@@ -164,6 +172,7 @@ namespace InventoryManagement.Server.Authorization.Controller
         [HttpDelete("delete/{email}"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> DeleteUser(string email)
         {
+            var user = await _userManager.FindByEmailAsync(email);
             var result = await _authService.DeleteUser(email);
 
             if (!result.Success)
@@ -172,6 +181,7 @@ namespace InventoryManagement.Server.Authorization.Controller
                 return BadRequest(result.ErrorMessages);
             }
 
+            _emailSender.SendEmail(user.UserName, user.Email, "Account Deletion", "Your account has been deleted", null);
             _logger.LogInformation($"AuthController: DeleteUser: User with email {email} deleted successfully");
             return Ok("User deleted successfully");
         }
