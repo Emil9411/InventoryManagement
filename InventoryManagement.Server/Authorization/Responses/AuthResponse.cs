@@ -1,4 +1,4 @@
 ﻿namespace InventoryManagement.Server.Authorization.Responses
 {
-    public record AuthResponse(string Email, string Username);
+    public record AuthResponse(string Email, string Username, string Role);
 }
