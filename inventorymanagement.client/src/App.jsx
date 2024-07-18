@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation } from "react-router-dom";
-import './App.css';
+import LogoutButton from './components/LogoutButton';
+import './index.css';
 
 function App() {
     const [user, setUser] = useState(null);
@@ -8,16 +9,23 @@ function App() {
 
     return (
         <div className="App">
-            <h1>Raktár Manager 2000</h1>
-            <div className="buttons">
-                <Link to="/login">
-                    <button>Belépés</button>
-                </Link>
-                <button>Regisztráció</button>
-                <button>Minden termék</button>
-                <button>Kivét</button>
-                <button>Bevét</button>
-                <button>Termék hozzáadása</button>
+            <div className="header">
+                <div className="header-title">
+                    <Link to="/">
+                        <h1 style={{ color: "white" }}>Raktár Manager 2000</h1>
+                    </Link>
+                </div>
+                <div className="header-buttons">
+                    <Link to="/login">
+                        <button>Belépés</button>
+                    </Link>
+                    <LogoutButton />
+                    <button>Regisztráció</button>
+                    <button>Minden termék</button>
+                    <button>Kivét</button>
+                    <button>Bevét</button>
+                    <button>Termék hozzáadása</button>
+                </div>
             </div>
             <Outlet />
         </div>
