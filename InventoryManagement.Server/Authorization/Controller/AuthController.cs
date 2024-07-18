@@ -49,7 +49,7 @@ namespace InventoryManagement.Server.Authorization.Controller
             _emailSender.SendEmail(result.Username, result.Email, "Email Verification", "Please verify your email address", verificationCode);
 
             _logger.LogInformation($"AuthController: User with email {result.Email} and username {result.Username} registered successfully");
-            return CreatedAtAction(nameof(Registration), new AuthResponse(result.Email, result.Username));
+            return CreatedAtAction(nameof(Registration), new AuthResponse(result.Email, result.Username, request.Role));
         }
 
         [HttpPost("verify/{userId}")]
@@ -95,13 +95,15 @@ namespace InventoryManagement.Server.Authorization.Controller
                 return BadRequest("Email is not verified");
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
+
             Response.Cookies.Append("Authorization", result.Token, new CookieOptions
             {
                 HttpOnly = true,
             });
 
             _logger.LogInformation($"AuthController: User with email {request.Email} logged in successfully");
-            return Ok(new AuthResponse(request.Email, result.Username));
+            return Ok(new AuthResponse(request.Email, result.Username, roles[0]));
         }
 
         [HttpPost("logout"), Authorize(Roles = "Admin, Manager, User")]
@@ -131,9 +133,10 @@ namespace InventoryManagement.Server.Authorization.Controller
                 var claims = result.Claims.ToList();
                 var email = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value ?? "";
                 var username = claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value ?? "";
+                var role = claims.FirstOrDefault(c => c.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value ?? "";
 
                 _logger.LogInformation("AuthController: WhoAmI: User found");
-                return Ok(new AuthResponse(email, username));
+                return Ok(new AuthResponse(email, username, role));
             }
 
             _logger.LogError("AuthController: WhoAmI: User not found");
