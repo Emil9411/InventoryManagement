@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import App from './App.jsx'
 import Login from './pages/Login.jsx'
+import AllItems from './pages/AllItems.jsx'
 import Logout from './components/LogoutButton.jsx'
 import './index.css'
 
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
             {
                 path: "/logout",
                 element: <Logout />
+            },
+            {
+                path: "/allitems",
+                element: <AllItems />
             }
         ]
     },
