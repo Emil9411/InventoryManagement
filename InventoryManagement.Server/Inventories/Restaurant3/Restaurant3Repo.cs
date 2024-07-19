@@ -6,7 +6,7 @@ namespace InventoryManagement.Server.Inventories.Restaurant3
 {
     public class Restaurant3Repo : GenericRepo<Restaurant3Item>
     {
-        public Restaurant3Repo(ItemContext context, ILogger<Restaurant3Repo> logger) : base(context, logger)
+        public Restaurant3Repo(UnifiedContext context, ILogger<Restaurant3Repo> logger) : base(context, logger)
         {
         }
     }

@@ -10,15 +10,13 @@ namespace InventoryManagement.Server.Authorization.Services
     {
         private readonly ILogger<EmailSender> _logger;
         private readonly IConfiguration _configuration;
-        private readonly VerifCodesContext _verifCodesContext;
-        private readonly UserContext _userContext;
+        private readonly UnifiedContext _unifiedContext;
 
-        public EmailSender(ILogger<EmailSender> logger, IConfiguration configuration, VerifCodesContext verifCodesContext, UserContext userContext)
+        public EmailSender(ILogger<EmailSender> logger, IConfiguration configuration, UnifiedContext unifiedContext)
         {
             _logger = logger;
             _configuration = configuration;
-            _verifCodesContext = verifCodesContext;
-            _userContext = userContext;
+            _unifiedContext = unifiedContext;
         }
 
         public void SendEmail(string username, string email, string subject, string body, string? verificationCode)
@@ -60,22 +58,22 @@ namespace InventoryManagement.Server.Authorization.Services
 
         public void SaveVerificationCode(string email, string verificationCode)
         {
-            var user = _userContext.Users.FirstOrDefault(u => u.Email == email);
-            var verifCode = _verifCodesContext.VerificationCodes.FirstOrDefault(vc => vc.UserId == user.Id);
+            var user = _unifiedContext.Users.FirstOrDefault(u => u.Email == email);
+            var verifCode = _unifiedContext.VerificationCodes.FirstOrDefault(vc => vc.UserId == user.Id);
             if (verifCode != null)
             {
-                _verifCodesContext.VerificationCodes.Remove(verifCode);
+                _unifiedContext.VerificationCodes.Remove(verifCode);
             }
             else
             {
-                _verifCodesContext.VerificationCodes.Add(new VerificationCode
+                _unifiedContext.VerificationCodes.Add(new VerificationCode
                 {
                     UserId = user.Id,
                     Code = verificationCode,
                     ExpirationTime = DateTime.Now.AddHours(3)
                 });
             }
-            _verifCodesContext.SaveChanges();
+            _unifiedContext.SaveChanges();
             _logger.LogInformation($"EmailSender: Verification code saved for {email}");
         }
     }

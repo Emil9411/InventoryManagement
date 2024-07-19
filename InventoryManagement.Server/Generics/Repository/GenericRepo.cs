@@ -6,11 +6,11 @@ namespace InventoryManagement.Server.Generics.Repository
 {
     public class GenericRepo<T> : IGenericRepo<T> where T : Item
     {
-        private readonly ItemContext _context;
+        private readonly UnifiedContext _context;
         private readonly ILogger<GenericRepo<T>> _logger;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepo(ItemContext context, ILogger<GenericRepo<T>> logger)
+        public GenericRepo(UnifiedContext context, ILogger<GenericRepo<T>> logger)
         {
             _context = context;
             _logger = logger;

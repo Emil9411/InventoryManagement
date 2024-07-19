@@ -14,15 +14,15 @@ namespace InventoryManagement.Server.Authorization.Services
         private readonly ITokenService _tokenService;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthService> _logger;
-        private readonly VerifCodesContext _verifCodesContext;
+        private readonly UnifiedContext _unifiedContext;
 
-        public AuthService(UserManager<AppUser> userManager, ITokenService tokenService, IConfiguration configuration, ILogger<AuthService> logger, VerifCodesContext verifCodesContext)
+        public AuthService(UserManager<AppUser> userManager, ITokenService tokenService, IConfiguration configuration, ILogger<AuthService> logger, UnifiedContext unifiedContext)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _configuration = configuration;
             _logger = logger;
-            _verifCodesContext = verifCodesContext;
+            _unifiedContext = unifiedContext;
         }
 
         public async Task<AuthResult> RegisterAsync(string email, string username, string password, string role)
@@ -160,7 +160,7 @@ namespace InventoryManagement.Server.Authorization.Services
             }
             if (!string.IsNullOrEmpty(verificationCode))
             {
-                var verifCode = _verifCodesContext.VerificationCodes.FirstOrDefault(vc => vc.UserId == user.Id);
+                var verifCode = _unifiedContext.VerificationCodes.FirstOrDefault(vc => vc.UserId == user.Id);
                 if (verifCode == null)
                 {
                     _logger.LogError($"AuthService: Verification code for user with id {userId} not found");
@@ -168,8 +168,8 @@ namespace InventoryManagement.Server.Authorization.Services
                 }
                 if (verifCode.Code == verificationCode)
                 {
-                    _verifCodesContext.VerificationCodes.Remove(verifCode);
-                    await _verifCodesContext.SaveChangesAsync();
+                    _unifiedContext.VerificationCodes.Remove(verifCode);
+                    await _unifiedContext.SaveChangesAsync();
                     user.EmailConfirmed = true;
                     await _userManager.UpdateAsync(user);
                     _logger.LogInformation($"AuthService: Verification code for user with id {userId} verified successfully");
