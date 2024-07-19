@@ -81,9 +81,7 @@ void AddServices()
 void AddDbContext()
 {
     var connectionString = builder.Configuration.GetConnectionString("DatabaseConnection");
-    builder.Services.AddDbContext<ItemContext>(options => options.UseSqlServer(connectionString));
-    builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(connectionString));
-    builder.Services.AddDbContext<VerifCodesContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddDbContext<UnifiedContext>(options => options.UseSqlServer(connectionString));
 }
 
 void ConfigureSwagger()
@@ -131,7 +129,8 @@ void AddIdentity()
             options.Password.RequireLowercase = false;
         })
         .AddRoles<IdentityRole>()
-        .AddEntityFrameworkStores<UserContext>();
+        .AddEntityFrameworkStores<UnifiedContext>()
+        .AddDefaultTokenProviders();
 }
 
 void AddAuthentication()
