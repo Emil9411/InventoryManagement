@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controller\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
