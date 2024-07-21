@@ -2,9 +2,7 @@ using InventoryManagement.Server.Authorization.Models;
 using InventoryManagement.Server.Authorization.Seeder;
 using InventoryManagement.Server.Authorization.Services;
 using InventoryManagement.Server.Context;
-using InventoryManagement.Server.Generics.Repository;
 using InventoryManagement.Server.Model;
-using InventoryManagement.Server.Model.Restaurants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -62,9 +60,6 @@ void AddServices()
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IEmailSender, EmailSender>();
     builder.Services.AddScoped<AuthSeeder>();
-    builder.Services.AddScoped(typeof(IGenericRepo<Restaurant1Item>), typeof(GenericRepo<Restaurant1Item>));
-    builder.Services.AddScoped(typeof(IGenericRepo<Restaurant2Item>), typeof(GenericRepo<Restaurant2Item>));
-    builder.Services.AddScoped(typeof(IGenericRepo<Restaurant3Item>), typeof(GenericRepo<Restaurant3Item>));
 
     // Add CORS services
     builder.Services.AddCors(options =>
