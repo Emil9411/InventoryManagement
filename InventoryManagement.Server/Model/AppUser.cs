@@ -10,5 +10,9 @@ namespace InventoryManagement.Server.Model
         public string? City { get; set; }
         public string? Country { get; set; }
         public string? PostalCode { get; set; }
+        public int? InventoryId { get; set; }
+        public Inventory Inventory { get; set; }
+        public int? ManagedInventoryId { get; set; }
+        public Inventory ManagedInventory { get; set; }
     }
 }
