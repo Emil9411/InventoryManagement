@@ -32,10 +32,6 @@ namespace InventoryManagement.Server.Context
                 .WithOne(u => u.Inventory)
                 .HasForeignKey(u => u.InventoryId);
             modelBuilder.Entity<Inventory>()
-                .HasOne(i => i.Manager)
-                .WithOne(u => u.ManagedInventory)
-                .HasForeignKey<Inventory>(i => i.ManagerId);
-            modelBuilder.Entity<Inventory>()
                 .HasMany(i => i.Items)
                 .WithOne(i => i.Inventory)
                 .HasForeignKey(i => i.InventoryId);
@@ -47,11 +43,6 @@ namespace InventoryManagement.Server.Context
                 .HasOne(u => u.Inventory)
                 .WithMany(i => i.Employees)
                 .HasForeignKey(u => u.InventoryId)
-                .OnDelete(DeleteBehavior.NoAction);
-            modelBuilder.Entity<AppUser>()
-                .HasOne(u => u.ManagedInventory)
-                .WithOne(i => i.Manager)
-                .HasForeignKey<AppUser>(u => u.ManagedInventoryId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

@@ -11,7 +11,6 @@
         public string Phone { get; set; }
         public string Email { get; set; }
         public string ManagerId { get; set; }
-        public AppUser Manager { get; set; }
         public ICollection<AppUser>? Employees { get; set; }
         public ICollection<Item>? Items { get; set; }
     }
