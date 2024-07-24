@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Server.Controller
 {
-    [Route("api/[controller]")]
+    [Route("api/item")]
     [ApiController]
     public class ItemController : ControllerBase
     {
