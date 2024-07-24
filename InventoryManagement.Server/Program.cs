@@ -3,6 +3,7 @@ using InventoryManagement.Server.Authorization.Seeder;
 using InventoryManagement.Server.Authorization.Services;
 using InventoryManagement.Server.Context;
 using InventoryManagement.Server.Model;
+using InventoryManagement.Server.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -59,6 +60,7 @@ void AddServices()
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IEmailSender, EmailSender>();
+    builder.Services.AddScoped<IItemRepo, ItemRepo>();
     builder.Services.AddScoped<AuthSeeder>();
 
     // Add CORS services
