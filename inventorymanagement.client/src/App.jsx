@@ -40,7 +40,9 @@ function App() {
                     ) : user.role === "Admin" || user.role === "Manager" ? (
                         <>
                             <LogoutButton />
-                            <button>Regisztráció</button>
+                            <Link to="/registration">
+                                <button>Regisztráció</button>
+                            </Link>
                             <Link to="/allitems">
                                 <button>Minden termék</button>
                             </Link>
