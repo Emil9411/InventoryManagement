@@ -53,9 +53,9 @@ namespace InventoryManagement.Server.Authorization.Controller
         }
 
         [HttpPost("verify/{userId}")]
-        public async Task<IActionResult> VerifyEmail(string userId, [FromBody] string verificationCode)
+        public async Task<IActionResult> VerifyEmail(string userId, [FromBody] VerifyRequest request)
         {
-            var result = await _authService.VerifyEmail(userId, verificationCode);
+            var result = await _authService.VerifyEmail(userId, request.VerificationCode);
             var user = await _userManager.FindByIdAsync(userId);
 
             if (!result)
