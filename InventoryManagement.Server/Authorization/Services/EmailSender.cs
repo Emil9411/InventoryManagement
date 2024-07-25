@@ -2,6 +2,7 @@
 using InventoryManagement.Server.Context;
 using InventoryManagement.Server.Model;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity;
 using MimeKit;
 
 namespace InventoryManagement.Server.Authorization.Services
@@ -11,18 +12,21 @@ namespace InventoryManagement.Server.Authorization.Services
         private readonly ILogger<EmailSender> _logger;
         private readonly IConfiguration _configuration;
         private readonly UnifiedContext _unifiedContext;
+        private readonly UserManager<AppUser> _userManager;
 
-        public EmailSender(ILogger<EmailSender> logger, IConfiguration configuration, UnifiedContext unifiedContext)
+        public EmailSender(ILogger<EmailSender> logger, IConfiguration configuration, UnifiedContext unifiedContext, UserManager<AppUser> userManager)
         {
             _logger = logger;
             _configuration = configuration;
             _unifiedContext = unifiedContext;
+            _userManager = userManager;
         }
 
         public void SendEmail(string username, string email, string subject, string body, string? verificationCode)
         {
             var emailMessage = new MimeMessage();
             var smtpSettings = _configuration.GetSection("SmtpSettings").Get<SmtpSettings>();
+            var user = _userManager.FindByEmailAsync(email).Result;
 
             emailMessage.From.Add(new MailboxAddress("EM&EM Software", smtpSettings.SenderEmail));
             emailMessage.To.Add(new MailboxAddress(username, email));
@@ -30,7 +34,7 @@ namespace InventoryManagement.Server.Authorization.Services
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart("plain")
             {
-                Text = verificationCode == null ? body : $"{body}\n\nYour verification code is: {verificationCode}\n\nThis code will expire in 3 hours."
+                Text = verificationCode == null ? body : $"{body}\n\nYour verification code is: {verificationCode}\n\nThis code will expire in 3 hours.\n\nGo to https://localhost:5173/verify/{user.Id} to verify your email address."
             };
 
             using (var client = new SmtpClient())
