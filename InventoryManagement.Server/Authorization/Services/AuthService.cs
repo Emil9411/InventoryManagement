@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Server.Authorization.Models;
+using InventoryManagement.Server.Authorization.Responses;
 using InventoryManagement.Server.Context;
 using InventoryManagement.Server.Model;
 using Microsoft.AspNetCore.Identity;
@@ -112,9 +113,16 @@ namespace InventoryManagement.Server.Authorization.Services
             }
         }
 
-        public async Task<ICollection<AppUser>> AppUsers()
+        public async Task<ICollection<UserDto>> AllUsers()
         {
-            return await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users.ToListAsync();
+            var userDtos = new List<UserDto>();
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+                userDtos.Add(new UserDto(user.Id, user.LastName, user.FirstName, user.City, user.PostalCode, user.Address, user.Email, user.PhoneNumber, user.UserName, roles[0], user.EmailConfirmed));
+            }
+            return userDtos;
         }
 
         public async Task<AuthResult> DeleteUser(string email)
@@ -137,6 +145,27 @@ namespace InventoryManagement.Server.Authorization.Services
                 _logger.LogError($"AuthService: Error deleting user with email {email}");
                 return FailedRegistration(result, email, user.UserName);
             }
+        }
+
+        public async Task<UserDto> UpdateUserData(UserDto userDto)
+        {
+            var user = await _userManager.FindByIdAsync(userDto.Id);
+            if (user == null)
+            {
+                _logger.LogError($"AuthService: User with id {userDto.Id} not found");
+                return null;
+            }
+
+            user.LastName = userDto.LastName;
+            user.FirstName = userDto.FirstName;
+            user.City = userDto.City;
+            user.PostalCode = userDto.PostalCode;
+            user.Address = userDto.Address;
+            user.PhoneNumber = userDto.PhoneNumber;
+
+            await _userManager.UpdateAsync(user);
+            _logger.LogInformation($"AuthService: User with id {userDto.Id} updated successfully");
+            return userDto;
         }
 
         public JwtSecurityToken Verify(string token)
