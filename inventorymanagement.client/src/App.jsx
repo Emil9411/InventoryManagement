@@ -24,6 +24,8 @@ function App() {
         getUser();
     }, [location.pathname]);
 
+    const isVerificationPage = location.pathname.startsWith('/verify');
+
     return (
         <div className="App">
             <div className="header">
@@ -33,30 +35,37 @@ function App() {
                     </Link>
                 </div>
                 <div className="header-buttons">
-                    {!user ? (
-                        <Link to="/login">
-                            <button>Belépés</button>
-                        </Link>
-                    ) : user.role === "Admin" || user.role === "Manager" ? (
+                    {!isVerificationPage && (
                         <>
-                            <LogoutButton />
-                            <Link to="/registration">
-                                <button>Regisztráció</button>
-                            </Link>
-                            <Link to="/allitems">
-                                <button>Minden termék</button>
-                            </Link>
-                            <button>Kivét</button>
-                            <button>Bevét</button>
-                            <button>Termék hozzáadása</button>
-                        </>
-                    ) : (
-                        <>
-                            <LogoutButton />
-                            <Link to="/allitems">
-                                <button>Minden termék</button>
-                            </Link>
-                            <button>Kivét</button>
+                            {!user ? (
+                                <Link to="/login">
+                                    <button>Belépés</button>
+                                </Link>
+                            ) : user.role === "Admin" || user.role === "Manager" ? (
+                                <>
+                                    <LogoutButton />
+                                    <Link to="/registration">
+                                        <button>Regisztráció</button>
+                                    </Link>
+                                    <Link to="/employees">
+                                        <button>Alkalmazottak</button>
+                                    </Link>
+                                    <Link to="/allitems">
+                                        <button>Minden termék</button>
+                                    </Link>
+                                    <button>Kivét</button>
+                                    <button>Bevét</button>
+                                    <button>Termék hozzáadása</button>
+                                </>
+                            ) : (
+                                <>
+                                    <LogoutButton />
+                                    <Link to="/allitems">
+                                        <button>Minden termék</button>
+                                    </Link>
+                                    <button>Kivét</button>
+                                </>
+                            )}
                         </>
                     )}
                 </div>
