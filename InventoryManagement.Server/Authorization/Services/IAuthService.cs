@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.Server.Authorization.Models;
+using InventoryManagement.Server.Model;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace InventoryManagement.Server.Authorization.Services
@@ -9,6 +10,7 @@ namespace InventoryManagement.Server.Authorization.Services
         Task<AuthResult> LoginAsync(string email, string password);
         Task<AuthResult> ChangePasswordAsync(string email, string currentPassword, string newPassword);
         Task<AuthResult> DeleteUser(string email);
+        Task<ICollection<AppUser>> AppUsers();
         JwtSecurityToken Verify(string token);
         Task<bool> VerifyEmail(string userId, string verificationCode);
     }
