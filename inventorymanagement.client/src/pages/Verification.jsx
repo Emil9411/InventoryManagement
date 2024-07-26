@@ -36,7 +36,27 @@ function Verification() {
                     icon: "success",
                     button: "OK"
                 }).then(() => {
-                    navigate("/");
+                    //check if any user is logged in
+                    const response = fetch("api/auth/check", {
+                        method: "GET",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    if (response.ok) {
+                        //if any user logged in, logout
+                        fetch("api/auth/logout", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        });
+                        navigate("/login");
+                    } else {
+                        navigate("/login");
+                    }
                 });
             } else {
                 const errorData = await response.text();
