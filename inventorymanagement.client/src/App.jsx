@@ -74,6 +74,7 @@ function App() {
             <div className="footer">
                 <p>© 2024 Raktár Manager</p>
                 <p>Created by: EM&EM Software</p>
+                <p>Contact: emandemsoftware@gmail.com</p>
                 <p>(Under registration)</p>
             </div>
         </div>
