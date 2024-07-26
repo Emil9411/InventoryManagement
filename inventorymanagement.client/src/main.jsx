@@ -6,6 +6,7 @@ import Login from './pages/Login.jsx'
 import AllItems from './pages/AllItems.jsx'
 import Registration from './pages/Registration.jsx'
 import Verification from './pages/Verification.jsx'
+import Employees from './pages/Employees.jsx'
 import Logout from './components/LogoutButton.jsx'
 import './index.css'
 
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
             {
                 path: "/verify/:userId",
                 element: <Verification />
+            },
+            {
+                path: "/employees",
+                element: <Employees />
             }
         ]
     },
