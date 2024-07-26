@@ -2,6 +2,7 @@
 using InventoryManagement.Server.Context;
 using InventoryManagement.Server.Model;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -109,6 +110,11 @@ namespace InventoryManagement.Server.Authorization.Services
                 _logger.LogError($"AuthService: Error changing password for user with email {email}");
                 return FailedRegistration(result, email, user?.UserName ?? "");
             }
+        }
+
+        public async Task<ICollection<AppUser>> AppUsers()
+        {
+            return await _userManager.Users.ToListAsync();
         }
 
         public async Task<AuthResult> DeleteUser(string email)
