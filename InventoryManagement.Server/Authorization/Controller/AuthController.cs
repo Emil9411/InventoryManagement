@@ -201,5 +201,20 @@ namespace InventoryManagement.Server.Authorization.Controller
             _logger.LogInformation($"AuthController: DeleteUser: User with email {email} deleted successfully");
             return Ok("User deleted successfully");
         }
+
+        [HttpGet("users"), Authorize(Roles = "Admin, Manager")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await _authService.AppUsers();
+
+            if (users == null)
+            {
+                _logger.LogError("AuthController: GetUsers: No users found");
+                return NotFound("No users found");
+            }
+
+            _logger.LogInformation("AuthController: GetUsers: Users found");
+            return Ok(users);
+        }
     }
 }
