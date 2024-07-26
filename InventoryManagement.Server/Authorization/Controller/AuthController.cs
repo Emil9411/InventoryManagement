@@ -199,13 +199,13 @@ namespace InventoryManagement.Server.Authorization.Controller
 
             _emailSender.SendEmail(user.UserName, user.Email, "Account Deletion", "Your account has been deleted", null);
             _logger.LogInformation($"AuthController: DeleteUser: User with email {email} deleted successfully");
-            return Ok("User deleted successfully");
+            return Ok(new { success = true, message = "User deleted successfully" });
         }
 
         [HttpGet("users"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _authService.AppUsers();
+            var users = await _authService.AllUsers();
 
             if (users == null)
             {
@@ -216,5 +216,27 @@ namespace InventoryManagement.Server.Authorization.Controller
             _logger.LogInformation("AuthController: GetUsers: Users found");
             return Ok(users);
         }
+
+        [HttpPut("update"), Authorize(Roles = "Admin, Manager, User")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserDto user)
+        {
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("AuthController: Invalid update user request");
+                return BadRequest(new { success = false, message = "Invalid update user request" });
+            }
+
+            var result = await _authService.UpdateUserData(user);
+
+            if (result == null)
+            {
+                _logger.LogError($"AuthController: UpdateUser failed for user with email {user.Email}");
+                return BadRequest(new { success = false, message = "Update user failed" });
+            }
+
+            _logger.LogInformation($"AuthController: UpdateUser: User with email {user.Email} updated successfully");
+            return Ok(new { success = true, data = result });
+        }
+
     }
 }
