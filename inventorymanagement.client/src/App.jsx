@@ -2,9 +2,10 @@
 import { Outlet, Link, useLocation } from "react-router-dom";
 import LogoutButton from './components/LogoutButton';
 import './index.css';
+import handleUpdateEmployeeData from './utils/employeeUpdate';
 
 function App() {
-    const [user, setUser] = useState(null); //email, username, role
+    const [user, setUser] = useState(null);
     const location = useLocation();
 
     async function getUser() {
@@ -16,8 +17,20 @@ function App() {
             },
         });
         const data = await response.json();
-        console.log(data);
-        setUser(data);
+        const userDataResponse = await fetch(`api/auth/user/${data.email}`, {
+            method: "GET",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const userData = await userDataResponse.json();
+        console.log(userData);
+        if (userData.firstName === null) {
+            handleUpdateEmployeeData(userData);
+        } else {
+            setUser(userData);
+        }
     }
 
     useEffect(() => {
@@ -53,6 +66,7 @@ function App() {
                                     <Link to="/allitems">
                                         <button>Minden termék</button>
                                     </Link>
+                                    <button>Profil</button>
                                     <button>Kivét</button>
                                     <button>Bevét</button>
                                     <button>Termék hozzáadása</button>
@@ -63,6 +77,7 @@ function App() {
                                     <Link to="/allitems">
                                         <button>Minden termék</button>
                                     </Link>
+                                    <button>Profil</button>
                                     <button>Kivét</button>
                                 </>
                             )}
@@ -74,7 +89,7 @@ function App() {
             <div className="footer">
                 <p>© 2024 Raktár Manager</p>
                 <p>Created by: EM&EM Software</p>
-                <p>Contact: emandemsoftware@gmail.com</p>
+                <p>Contact: <a href="mailto:emandemsoftware@gmail.com">emandemsoftware@gmail.com</a></p>
                 <p>(Under registration)</p>
             </div>
         </div>
