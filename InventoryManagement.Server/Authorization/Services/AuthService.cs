@@ -168,6 +168,19 @@ namespace InventoryManagement.Server.Authorization.Services
             return userDto;
         }
 
+        public async Task<UserDto> GetUserByEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                _logger.LogError($"AuthService: User with email {email} not found");
+                return null;
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            return new UserDto(user.Id, user.LastName, user.FirstName, user.City, user.PostalCode, user.Address, user.Email, user.PhoneNumber, user.UserName, roles[0], user.EmailConfirmed);
+        }
+
         public JwtSecurityToken Verify(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

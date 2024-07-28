@@ -12,6 +12,7 @@ namespace InventoryManagement.Server.Authorization.Services
         Task<AuthResult> DeleteUser(string email);
         Task<ICollection<UserDto>> AllUsers();
         Task<UserDto> UpdateUserData(UserDto user);
+        Task<UserDto> GetUserByEmail(string email);
         JwtSecurityToken Verify(string token);
         Task<bool> VerifyEmail(string userId, string verificationCode);
     }
