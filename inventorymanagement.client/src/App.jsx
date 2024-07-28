@@ -66,7 +66,9 @@ function App() {
                                     <Link to="/allitems">
                                         <button>Minden termék</button>
                                     </Link>
-                                    <button>Profil</button>
+                                    <Link to="/profile">
+                                        <button>Profil</button>
+                                    </Link>
                                     <button>Kivét</button>
                                     <button>Bevét</button>
                                     <button>Termék hozzáadása</button>
@@ -77,7 +79,9 @@ function App() {
                                     <Link to="/allitems">
                                         <button>Minden termék</button>
                                     </Link>
-                                    <button>Profil</button>
+                                    <Link to="/profile">
+                                        <button>Profil</button>
+                                    </Link>
                                     <button>Kivét</button>
                                 </>
                             )}

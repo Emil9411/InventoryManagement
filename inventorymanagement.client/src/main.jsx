@@ -7,6 +7,7 @@ import AllItems from './pages/AllItems.jsx'
 import Registration from './pages/Registration.jsx'
 import Verification from './pages/Verification.jsx'
 import Employees from './pages/Employees.jsx'
+import Profile from './pages/Profile.jsx'
 import Logout from './components/LogoutButton.jsx'
 import './index.css'
 
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
             {
                 path: "/employees",
                 element: <Employees />
+            },
+            {
+                path: "/profile",
+                element: <Profile />
             }
         ]
     },

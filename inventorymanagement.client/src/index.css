@@ -266,3 +266,31 @@ button {
 .swal-modal {
     color: #1a1a1a;
 }
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    border-radius: 8px;
+    background-color: #1a1a1a;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+    .profile button {
+        background-color: #646cff;
+        color: #1a1a1a;
+        border: 1px solid transparent;
+        padding: 0.6em 1.2em;
+        font-size: 1em;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background-color 0.25s;
+    }
