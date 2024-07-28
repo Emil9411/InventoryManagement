@@ -238,5 +238,19 @@ namespace InventoryManagement.Server.Authorization.Controller
             return Ok(new { success = true, data = result });
         }
 
+        [HttpGet("user/{email}"), Authorize(Roles = "Admin, Manager, User")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var user = await _authService.GetUserByEmail(email);
+
+            if (user == null)
+            {
+                _logger.LogError($"AuthController: GetUserByEmail: No user found with email {email}");
+                return NotFound("No user found");
+            }
+
+            _logger.LogInformation($"AuthController: GetUserByEmail: User found with email {email}");
+            return Ok(user);
+        }
     }
 }
