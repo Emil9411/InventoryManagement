@@ -61,6 +61,7 @@ void AddServices()
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IEmailSender, EmailSender>();
     builder.Services.AddScoped<IItemRepo, ItemRepo>();
+    builder.Services.AddScoped<IInventoryRepo, InventoryRepo>();
     builder.Services.AddScoped<AuthSeeder>();
 
     // Add CORS services
