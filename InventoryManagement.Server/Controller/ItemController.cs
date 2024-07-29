@@ -129,21 +129,6 @@ namespace InventoryManagement.Server.Controller
             return Ok(items);
         }
 
-        [HttpGet("getAllItems/inventory/{inventoryId}"), Authorize(Roles = "Admin, Manager, User")]
-        public async Task<IActionResult> GetAllItems(int inventoryId)
-        {
-            var items = await _itemRepo.GetAllItemsAsync(inventoryId);
-
-            if (items == null)
-            {
-                _logger.LogError($"ItemController: No items found in inventory with id {inventoryId}");
-                return NotFound("No items found");
-            }
-
-            _logger.LogInformation($"ItemController: All items retrieved successfully from inventory with id {inventoryId}");
-            return Ok(items);
-        }
-
         [HttpGet("getAllIngredients"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAllIngredients()
         {
@@ -156,21 +141,6 @@ namespace InventoryManagement.Server.Controller
             }
 
             _logger.LogInformation("ItemController: All ingredients retrieved successfully");
-            return Ok(items);
-        }
-
-        [HttpGet("getAllIngredients/inventory/{inventoryId}"), Authorize(Roles = "Admin, Manager, User")]
-        public async Task<IActionResult> GetAllIngredients(int inventoryId)
-        {
-            var items = await _itemRepo.GetAllIngredientsAsync(inventoryId);
-
-            if (items == null)
-            {
-                _logger.LogError($"ItemController: No ingredients found in inventory with id {inventoryId}");
-                return NotFound("No ingredients found");
-            }
-
-            _logger.LogInformation($"ItemController: All ingredients retrieved successfully from inventory with id {inventoryId}");
             return Ok(items);
         }
 
@@ -189,21 +159,6 @@ namespace InventoryManagement.Server.Controller
             return Ok(items);
         }
 
-        [HttpGet("getAllNonIngredients/inventory/{inventoryId}"), Authorize(Roles = "Admin, Manager, User")]
-        public async Task<IActionResult> GetAllNonIngredients(int inventoryId)
-        {
-            var items = await _itemRepo.GetAllNonIngredientsAsync(inventoryId);
-
-            if (items == null)
-            {
-                _logger.LogError($"ItemController: No non-ingredients found in inventory with id {inventoryId}");
-                return NotFound("No non-ingredients found");
-            }
-
-            _logger.LogInformation($"ItemController: All non-ingredients retrieved successfully from inventory with id {inventoryId}");
-            return Ok(items);
-        }
-
         [HttpGet("getAllItemsToOrder"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAllItemsToOrder()
         {
@@ -216,21 +171,6 @@ namespace InventoryManagement.Server.Controller
             }
 
             _logger.LogInformation("ItemController: All items to order retrieved successfully");
-            return Ok(items);
-        }
-
-        [HttpGet("getAllItemsToOrder/inventory/{inventoryId}"), Authorize(Roles = "Admin, Manager, User")]
-        public async Task<IActionResult> GetAllItemsToOrder(int inventoryId)
-        {
-            var items = await _itemRepo.GetAllItemsToOrderAsync(inventoryId);
-
-            if (items == null)
-            {
-                _logger.LogError($"ItemController: No items to order found in inventory with id {inventoryId}");
-                return NotFound("No items to order found");
-            }
-
-            _logger.LogInformation($"ItemController: All items to order retrieved successfully from inventory with id {inventoryId}");
             return Ok(items);
         }
 
@@ -249,21 +189,6 @@ namespace InventoryManagement.Server.Controller
             return Ok(items);
         }
 
-        [HttpGet("getAllConsumableItems/inventory/{inventoryId}"), Authorize(Roles = "Admin, Manager, User")]
-        public async Task<IActionResult> GetAllConsumableItems(int inventoryId)
-        {
-            var items = await _itemRepo.GetAllConsumableItemsAsync(inventoryId);
-
-            if (items == null)
-            {
-                _logger.LogError($"ItemController: No consumable items found in inventory with id {inventoryId}");
-                return NotFound("No consumable items found");
-            }
-
-            _logger.LogInformation($"ItemController: All consumable items retrieved successfully from inventory with id {inventoryId}");
-            return Ok(items);
-        }
-
         [HttpGet("getAllNonConsumableItems"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAllNonConsumableItems()
         {
@@ -276,21 +201,6 @@ namespace InventoryManagement.Server.Controller
             }
 
             _logger.LogInformation("ItemController: All non-consumable items retrieved successfully");
-            return Ok(items);
-        }
-
-        [HttpGet("getAllNonConsumableItems/inventory/{inventoryId}"), Authorize(Roles = "Admin, Manager, User")]
-        public async Task<IActionResult> GetAllNonConsumableItems(int inventoryId)
-        {
-            var items = await _itemRepo.GetAllNonConsumableItemsAsync(inventoryId);
-
-            if (items == null)
-            {
-                _logger.LogError($"ItemController: No non-consumable items found in inventory with id {inventoryId}");
-                return NotFound("No non-consumable items found");
-            }
-
-            _logger.LogInformation($"ItemController: All non-consumable items retrieved successfully from inventory with id {inventoryId}");
             return Ok(items);
         }
 
@@ -309,21 +219,6 @@ namespace InventoryManagement.Server.Controller
             return Ok(items);
         }
 
-        [HttpGet("getAllEquipmentItems/inventory/{inventoryId}"), Authorize(Roles = "Admin, Manager, User")]
-        public async Task<IActionResult> GetAllEquipmentItems(int inventoryId)
-        {
-            var items = await _itemRepo.GetAllEquipmentItemsAsync(inventoryId);
-
-            if (items == null)
-            {
-                _logger.LogError($"ItemController: No equipment items found in inventory with id {inventoryId}");
-                return NotFound("No equipment items found");
-            }
-
-            _logger.LogInformation($"ItemController: All equipment items retrieved successfully from inventory with id {inventoryId}");
-            return Ok(items);
-        }
-
         [HttpGet("getAllNonEquipmentItems"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> GetAllNonEquipmentItems()
         {
@@ -336,21 +231,6 @@ namespace InventoryManagement.Server.Controller
             }
 
             _logger.LogInformation("ItemController: All non-equipment items retrieved successfully");
-            return Ok(items);
-        }
-
-        [HttpGet("getAllNonEquipmentItems/inventory/{inventoryId}"), Authorize(Roles = "Admin, Manager, User")]
-        public async Task<IActionResult> GetAllNonEquipmentItems(int inventoryId)
-        {
-            var items = await _itemRepo.GetAllNonEquipmentItemsAsync(inventoryId);
-
-            if (items == null)
-            {
-                _logger.LogError($"ItemController: No non-equipment items found in inventory with id {inventoryId}");
-                return NotFound("No non-equipment items found");
-            }
-
-            _logger.LogInformation($"ItemController: All non-equipment items retrieved successfully from inventory with id {inventoryId}");
             return Ok(items);
         }
     }
