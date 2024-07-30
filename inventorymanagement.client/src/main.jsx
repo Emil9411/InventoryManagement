@@ -8,6 +8,7 @@ import Registration from './pages/Registration.jsx'
 import Verification from './pages/Verification.jsx'
 import Employees from './pages/Employees.jsx'
 import Profile from './pages/Profile.jsx'
+import Inventory from './pages/Inventory.jsx'
 import Logout from './components/LogoutButton.jsx'
 import './index.css'
 
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
             {
                 path: "/profile",
                 element: <Profile />
+            },
+            {
+                path: "/inventory",
+                element: <Inventory />
             }
         ]
     },

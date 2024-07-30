@@ -69,6 +69,9 @@ function App() {
                                     <Link to="/profile">
                                         <button>Profil</button>
                                     </Link>
+                                    <Link to="/inventory">
+                                        <button>Raktár</button>
+                                    </Link>
                                     <button>Kivét</button>
                                     <button>Bevét</button>
                                     <button>Termék hozzáadása</button>
@@ -81,6 +84,9 @@ function App() {
                                     </Link>
                                     <Link to="/profile">
                                         <button>Profil</button>
+                                    </Link>
+                                    <Link to="/inventory">
+                                        <button>Raktár</button>
                                     </Link>
                                     <button>Kivét</button>
                                 </>
