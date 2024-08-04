@@ -63,32 +63,22 @@ function App() {
                                     <Link to="/employees">
                                         <button>Alkalmazottak</button>
                                     </Link>
-                                    <Link to="/allitems">
-                                        <button>Minden termék</button>
-                                    </Link>
                                     <Link to="/profile">
                                         <button>Profil</button>
                                     </Link>
                                     <Link to="/inventory">
                                         <button>Raktár</button>
                                     </Link>
-                                    <button>Kivét</button>
-                                    <button>Bevét</button>
-                                    <button>Termék hozzáadása</button>
                                 </>
                             ) : (
                                 <>
                                     <LogoutButton />
-                                    <Link to="/allitems">
-                                        <button>Minden termék</button>
-                                    </Link>
                                     <Link to="/profile">
                                         <button>Profil</button>
                                     </Link>
                                     <Link to="/inventory">
                                         <button>Raktár</button>
                                     </Link>
-                                    <button>Kivét</button>
                                 </>
                             )}
                         </>
