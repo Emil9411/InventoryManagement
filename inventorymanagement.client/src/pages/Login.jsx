@@ -1,5 +1,8 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import LoginIcon from '@mui/icons-material/Login';
+import CloseIcon from '@mui/icons-material/Close';
 import "../index.css";
 import swal from 'sweetalert';
 
@@ -81,10 +84,10 @@ function Login() {
                         </tr>
                         <tr>
                             <td>
-                                <button onClick={() => navigate("/")} type="button">Bezár</button>
+                                <Button variant='outlined' startIcon={<CloseIcon />} onClick={() => navigate("/")} type="button">Bezár</Button>
                             </td>
                             <td>
-                                <button type="submit">Belépés</button>
+                                <Button variant='outlined' startIcon={<LoginIcon />}type="submit">Belépés</Button>
                             </td>
                         </tr>
                         <tr rowSpan="2">

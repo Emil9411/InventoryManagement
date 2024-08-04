@@ -1,4 +1,6 @@
 ﻿import { useNavigate, useLocation } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import LogoutIcon from '@mui/icons-material/Logout';
 import swal from 'sweetalert';
 
 function LogoutButton() {
@@ -43,7 +45,7 @@ function LogoutButton() {
     }
     return (
         <>
-            <button onClick={handleLogout}>Kilépés</button>
+            <Button onClick={handleLogout} startIcon={<LogoutIcon />}>Kilépés</Button>
         </>
     );
 }

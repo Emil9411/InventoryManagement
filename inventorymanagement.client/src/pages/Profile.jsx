@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
+import Button from '@mui/material/Button';
 import '../index.css';
-import swal from 'sweetalert';
 import handleUpdateEmployeeData from '../utils/employeeUpdate.jsx';
 
 function Profile() {
@@ -70,7 +70,7 @@ function Profile() {
                         </tr>
                     </tbody>
                 </table>
-                <button onClick={() => handleUpdateEmployeeData(user)}>Adatok módosítása</button>
+                <Button onClick={() => handleUpdateEmployeeData(user)}>Adatok módosítása</Button>
             </div>
         </div>
     );

@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from 'react';
+import { Button } from '@mui/material';
+import LoadingCircle from '../components/LoadingCircle';
 import '../index.css';
-import swal from 'sweetalert';
 
 function Inventory() {
     const [user, setUser] = useState(null);
@@ -33,10 +34,7 @@ function Inventory() {
 
     if (loading) {
         return (
-            <>
-                <br />
-                <div className="spinner"></div>
-            </>
+            <LoadingCircle />
         );
     }
 
@@ -44,48 +42,48 @@ function Inventory() {
         <div className="inventory">
             {user && user.role === "Admin" ? (
                 <>
-                    <button>Új raktár hozzáadása</button>
-                    <button>Összes raktár listázása</button>
-                    <button>Raktár adatok frissítése</button>
-                    <button>Raktár törlése</button>
-                    <button>Raktár adatok</button>
-                    <button>Alkalmazottak</button>
-                    <button>Alkalmazott hozzáadása</button>
-                    <button>Alkalmazott törlése</button>
-                    <button>Raktárkészlet</button>
-                    <button>Hozzávalók</button>
-                    <button>Termékek</button>
-                    <button>Fogyócikkek</button>
-                    <button>Tartós cikkek</button>
-                    <button>Felszerelések</button>
-                    <button>Eszközök</button>
-                    <button>Rendelési lista</button>
+                    <Button>Új raktár hozzáadása</Button>
+                    <Button>Összes raktár listázása</Button>
+                    <Button>Raktár adatok frissítése</Button>
+                    <Button>Raktár törlése</Button>
+                    <Button>Raktár adatok</Button>
+                    <Button>Alkalmazottak</Button>
+                    <Button>Alkalmazott hozzáadása</Button>
+                    <Button>Alkalmazott törlése</Button>
+                    <Button>Raktárkészlet</Button>
+                    <Button>Hozzávalók</Button>
+                    <Button>Termékek</Button>
+                    <Button>Fogyócikkek</Button>
+                    <Button>Tartós cikkek</Button>
+                    <Button>Felszerelések</Button>
+                    <Button>Eszközök</Button>
+                    <Button>Rendelési lista</Button>
                 </>
             ) : user.role === "Manager" ? (
                 <>
-                    <button>Raktár adatok</button>
-                    <button>Alkalmazottak</button>
-                    <button>Alkalmazott hozzáadása</button>
-                    <button>Alkalmazott törlése</button>
-                    <button>Raktárkészlet</button>
-                    <button>Hozzávalók</button>
-                    <button>Termékek</button>
-                    <button>Fogyócikkek</button>
-                    <button>Tartós cikkek</button>
-                    <button>Felszerelések</button>
-                    <button>Eszközök</button>
-                    <button>Rendelési lista</button>
+                    <Button>Raktár adatok</Button>
+                    <Button>Alkalmazottak</Button>
+                    <Button>Alkalmazott hozzáadása</Button>
+                    <Button>Alkalmazott törlése</Button>
+                    <Button>Raktárkészlet</Button>
+                    <Button>Hozzávalók</Button>
+                    <Button>Termékek</Button>
+                    <Button>Fogyócikkek</Button>
+                    <Button>Tartós cikkek</Button>
+                    <Button>Felszerelések</Button>
+                    <Button>Eszközök</Button>
+                    <Button>Rendelési lista</Button>
                 </>
             ) : user.role === "User" ? (
                 <>
-                    <button>Raktárkészlet</button>
-                    <button>Hozzávalók</button>
-                    <button>Termékek</button>
-                    <button>Fogyócikkek</button>
-                    <button>Tartós cikkek</button>
-                    <button>Felszerelések</button>
-                    <button>Eszközök</button>
-                    <button>Rendelési lista</button>
+                    <Button>Raktárkészlet</Button>
+                    <Button>Hozzávalók</Button>
+                    <Button>Termékek</Button>
+                    <Button>Fogyócikkek</Button>
+                    <Button>Tartós cikkek</Button>
+                    <Button>Felszerelések</Button>
+                    <Button>Eszközök</Button>
+                    <Button>Rendelési lista</Button>
                 </>
             ) : (
                 null

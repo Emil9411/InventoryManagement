@@ -1,5 +1,6 @@
 ﻿import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Button from '@mui/material/Button';
 import "../index.css";
 import swal from 'sweetalert';
 
@@ -70,7 +71,7 @@ function Verification() {
                         onChange={(e) => setVerificationCode(e.target.value)}
                     />
                 </label>
-                <button type="submit">Visszaigazolás</button>
+                <Button type="submit">Visszaigazolás</Button>
             </form>
         </div>
     );

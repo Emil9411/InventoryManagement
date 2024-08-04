@@ -1,4 +1,9 @@
 ﻿import { useState, useEffect } from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Button, Table, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import LoadingCircle from '../components/LoadingCircle';
 import '../index.css';
 import swal from 'sweetalert';
 import handleUpdateEmployeeData from '../utils/employeeUpdate.jsx';
@@ -28,6 +33,12 @@ function Employees() {
         getEmployees();
     }, []);
 
+    const darkTheme = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
+
     function handleDeleteEmployee(selectedEmployee) {
         swal({
             text: "Biztosan törli a munkatársat?",
@@ -44,8 +55,8 @@ function Employees() {
                     const response = await fetch(`api/auth/delete/${selectedEmployee.email}`, {
                         method: "DELETE",
                         credentials: "include",
-                            headers: {
-                                "Content-Type": "application/json",
+                        headers: {
+                            "Content-Type": "application/json",
                         },
                     });
                     const data = await response.json();
@@ -72,54 +83,53 @@ function Employees() {
 
     if (loading) {
         return (
-            <>
-                <br />
-                <div className="spinner"></div>
-            </>
+            <LoadingCircle />
         );
     }
 
     return (
-        <div className="employee-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Vezetéknév</th>
-                        <th>Keresztnév</th>
-                        <th>Cím</th>
-                        <th>Email</th>
-                        <th>Telefonszám</th>
-                        <th>Felhasználónév</th>
-                        <th>Szerepkör</th>
-                        <th>Státusz</th>
-                        <th>Adatok módosítása</th>
-                        <th>Felhasználó törlése</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {employees.map((employee) => (
-                        <tr key={employee.id}>
-                            <td>{employee.lastName}</td>
-                            <td>{employee.firstName}</td>
-                            <td>{employee.city} {employee.postalCode}, {employee.address}</td>
-                            <td>{employee.email}</td>
-                            <td>{employee.phoneNumber}</td>
-                            <td>{employee.userName}</td>
-                            <td>{employee.role}</td>
-                            <td style={{ color: employee.emailConfirmed ? "green" : "red" }}>
-                                {employee.emailConfirmed ? "Aktív" : "Inaktív"}
-                            </td>
-                            <td>
-                                <button className="edit-button" onClick={() => handleUpdateEmployeeData(employee)}>Módosítás</button>
-                            </td>
-                            <td>
-                                <button className="delete-button" onClick={() => handleDeleteEmployee(employee)}>Törlés</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <ThemeProvider theme={darkTheme}>
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 650, width: '80vw', marginLeft: 'auto', marginRight: 'auto' }} aria-label="employee table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Vezetéknév</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Keresztnév</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Cím</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Email</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Telefonszám</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Felhasználónév</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Szerepkör</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Státusz</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Adatok módosítása</TableCell>
+                            <TableCell sx={{ fontWeight: 'bold' }}>Felhasználó törlése</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {employees.map((employee) => (
+                            <TableRow key={employee.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                <TableCell component="th" scope="row">{employee.lastName}</TableCell>
+                                <TableCell>{employee.firstName}</TableCell>
+                                <TableCell>{employee.city} {employee.postalCode}, {employee.address}</TableCell>
+                                <TableCell>{employee.email}</TableCell>
+                                <TableCell>{employee.phoneNumber}</TableCell>
+                                <TableCell>{employee.userName}</TableCell>
+                                <TableCell>{employee.role}</TableCell>
+                                <TableCell sx={{ color: employee.emailConfirmed ? "green" : "red" }}>
+                                    {employee.emailConfirmed ? "Aktív" : "Inaktív"}
+                                </TableCell>
+                                <TableCell>
+                                    <Button variant='outlined' color='info' onClick={() => handleUpdateEmployeeData(employee)} startIcon={<EditIcon />}>Módosítás</Button>
+                                </TableCell>
+                                <TableCell>
+                                    <Button variant='outlined' color='error' onClick={() => handleDeleteEmployee(employee)} startIcon={<DeleteIcon />}>Törlés</Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </ThemeProvider>
     );
 }
 

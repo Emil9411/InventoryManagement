@@ -1,6 +1,13 @@
 ﻿import { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation } from "react-router-dom";
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import LogoutButton from './components/LogoutButton';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import GroupsIcon from '@mui/icons-material/Groups';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+import LoginIcon from '@mui/icons-material/Login';
 import './index.css';
 import handleUpdateEmployeeData from './utils/employeeUpdate';
 
@@ -47,43 +54,43 @@ function App() {
                         <h1 style={{ color: "white" }}>Raktár Manager</h1>
                     </Link>
                 </div>
-                <div className="header-buttons">
+                <ButtonGroup variant="outlined" size="large" aria-label="header button group">
                     {!isVerificationPage && (
                         <>
                             {!user ? (
                                 <Link to="/login">
-                                    <button>Belépés</button>
+                                    <Button startIcon={<LoginIcon />}>Belépés</Button>
                                 </Link>
                             ) : user.role === "Admin" || user.role === "Manager" ? (
                                 <>
                                     <LogoutButton />
                                     <Link to="/registration">
-                                        <button>Regisztráció</button>
+                                        <Button startIcon={<PersonAddIcon />}>Regisztráció</Button>
                                     </Link>
                                     <Link to="/employees">
-                                        <button>Alkalmazottak</button>
+                                        <Button startIcon={<GroupsIcon />}>Alkalmazottak</Button>
                                     </Link>
                                     <Link to="/profile">
-                                        <button>Profil</button>
+                                        <Button startIcon={<ManageAccountsIcon />}>Profil</Button>
                                     </Link>
                                     <Link to="/inventory">
-                                        <button>Raktár</button>
+                                        <Button startIcon={<WarehouseIcon />}>Raktár</Button>
                                     </Link>
                                 </>
                             ) : (
                                 <>
                                     <LogoutButton />
                                     <Link to="/profile">
-                                        <button>Profil</button>
+                                        <Button startIcon={<ManageAccountsIcon />}>Profil</Button>
                                     </Link>
                                     <Link to="/inventory">
-                                        <button>Raktár</button>
+                                        <Button startIcon={<WarehouseIcon />}>Raktár</Button>
                                     </Link>
                                 </>
                             )}
                         </>
                     )}
-                </div>
+                </ButtonGroup>
             </div>
             <Outlet />
             <div className="footer">

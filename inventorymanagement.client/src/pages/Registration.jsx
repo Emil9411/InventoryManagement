@@ -1,5 +1,7 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import "../index.css";
 import swal from 'sweetalert';
 
@@ -101,7 +103,7 @@ function Registration() {
                         </tr>
                         <tr>
                             <td colSpan="2">
-                                <button type="submit">Regisztráció</button>
+                                <Button variant='outlined' startIcon={<PersonAddIcon />} type="submit">Regisztráció</Button>
                             </td>
                         </tr>
                     </tbody>
