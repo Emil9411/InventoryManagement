@@ -124,6 +124,19 @@ namespace InventoryManagement.Server.Controller
             return Ok(items);
         }
 
+        [HttpGet("{id}/getbyname/{name}"), Authorize(Roles = "Admin, Manager, User")]
+        public async Task<ActionResult<Item>> GetItemByName(int id, string name)
+        {
+            var item = await _itemRepo.GetItemByNameAsync(name, id);
+            if (item == null)
+            {
+                _logger.LogError($"InventoryController: GetItemByName: Item with name {name} not found in inventory with id {id}");
+                return NotFound($"Item with name {name} not found in inventory with id {id}");
+            }
+            _logger.LogInformation($"InventoryController: GetItemByName: Item with name {name} retrieved from inventory with id {id}");
+            return Ok(item);
+        }
+
         [HttpGet("{id}"), Authorize(Roles = "Admin, Manager")]
         public async Task<ActionResult<Inventory>> GetInventoryById(int id)
         {

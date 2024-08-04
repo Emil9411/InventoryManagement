@@ -48,21 +48,6 @@ namespace InventoryManagement.Server.Controller
             return Ok(items);
         }
 
-        [HttpGet("getByName/{name}/inventory/{inventoryId}"), Authorize(Roles = "Admin, Manager, User")]
-        public async Task<IActionResult> GetItemByName(string name, int inventoryId)
-        {
-            var items = await _itemRepo.GetItemByNameAsync(name, inventoryId);
-
-            if (items == null)
-            {
-                _logger.LogError($"ItemController: Item with name {name} not found in inventory with id {inventoryId}");
-                return NotFound("Item not found");
-            }
-
-            _logger.LogInformation($"ItemController: Item with name {name} retrieved successfully from inventory with id {inventoryId}");
-            return Ok(items);
-        }
-
         [HttpPost("create"), Authorize(Roles = "Admin, Manager")]
         public async Task<IActionResult> CreateItem([FromBody] Item item)
         {
