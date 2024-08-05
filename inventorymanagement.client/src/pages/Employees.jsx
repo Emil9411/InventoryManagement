@@ -1,5 +1,4 @@
 ﻿import { useState, useEffect } from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Button, Table, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,6 +10,7 @@ import handleUpdateEmployeeData from '../utils/employeeUpdate.jsx';
 function Employees() {
     const [employees, setEmployees] = useState([]);
     const [loading, setLoading] = useState(true);
+
 
     async function getEmployees() {
         try {
@@ -32,12 +32,6 @@ function Employees() {
     useEffect(() => {
         getEmployees();
     }, []);
-
-    const darkTheme = createTheme({
-        palette: {
-            mode: 'dark',
-        },
-    });
 
     function handleDeleteEmployee(selectedEmployee) {
         swal({
@@ -88,7 +82,6 @@ function Employees() {
     }
 
     return (
-        <ThemeProvider theme={darkTheme}>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650, width: '80vw', marginLeft: 'auto', marginRight: 'auto' }} aria-label="employee table">
                     <TableHead>
@@ -129,7 +122,6 @@ function Employees() {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </ThemeProvider>
     );
 }
 
