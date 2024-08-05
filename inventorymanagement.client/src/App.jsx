@@ -1,19 +1,138 @@
 ﻿import { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation } from "react-router-dom";
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import LogoutButton from './components/LogoutButton';
+import { Button, ButtonGroup, Box, Drawer, List, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText, ThemeProvider, CssBaseline } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import WarehouseIcon from '@mui/icons-material/Warehouse';
 import LoginIcon from '@mui/icons-material/Login';
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
+import MapIcon from '@mui/icons-material/Map';
+import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
+import WrongLocationIcon from '@mui/icons-material/WrongLocation';
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import KitchenIcon from '@mui/icons-material/Kitchen';
+import EggIcon from '@mui/icons-material/Egg';
+import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import OutdoorGrillIcon from '@mui/icons-material/OutdoorGrill';
+import BlenderIcon from '@mui/icons-material/Blender';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import './index.css';
+import { themes } from './utils/themes';
+import ThemeSelect from './components/ThemeSelect';
+import LogoutButton from './components/LogoutButton';
 import handleUpdateEmployeeData from './utils/employeeUpdate';
 
 function App() {
     const [user, setUser] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
     const location = useLocation();
+
+    const inventoryDrawerListAdminPart = [
+        { "Új raktár hozzáadása": <AddLocationAltIcon /> },
+        { "Összes raktár listázása": <MapIcon /> },
+        { "Raktár adatok frissítése": <EditLocationAltIcon /> },
+        { "Raktár törlése": <WrongLocationIcon /> }
+    ];
+    const inventoryDrawerListManagerPart = [
+        { "Raktár adatok": <FmdGoodIcon /> },
+        { "Alkalmazottak": <GroupsIcon /> },
+        { "Alkalmazott hozzáadása": <PersonAddIcon /> },
+        { "Alkalmazott törlése": <PersonRemoveIcon /> }
+    ];
+    const inventoryDrawerListUserPart = [
+        { "Raktárkészlet": <WarehouseIcon /> },
+        { "Hozzávalók": <EggIcon /> },
+        { "Termékek": <KitchenIcon /> },
+        { "Fogyócikkek": <HowToVoteIcon /> },
+        { "Tartós cikkek": <RestaurantIcon /> },
+        { "Felszerelések": <OutdoorGrillIcon /> },
+        { "Eszközök": <BlenderIcon /> },
+        { "Rendelési lista": <ChecklistIcon /> }
+    ];
+
+    const adminDrawerList = [...inventoryDrawerListAdminPart, ...inventoryDrawerListManagerPart, ...inventoryDrawerListUserPart];
+    const managerDrawerList = [...inventoryDrawerListManagerPart, ...inventoryDrawerListUserPart];
+
+    function toggleDrawer(newOpen) {
+        setOpen(newOpen);
+    }
+
+    const InventoryDrawerList = (
+        <Box sx={{ width: '20vw' }} role="presentation" onClick={() => toggleDrawer(false)}>
+            <List>
+                {user === null ? (
+                    null
+                ) : user.role === "Admin" ? (
+                    <>
+                        {adminDrawerList.map((item, index) => (
+                            <>
+                                {index === 4 || index === 8 ? (
+                                    <>
+                                        <Divider />
+                                        <ListItem key={index}>
+                                            <ListItemButton>
+                                                <ListItemIcon>{Object.values(item)[0]}</ListItemIcon>
+                                                <ListItemText primary={Object.keys(item)[0]} />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    </>
+                                ) : (
+                                    <ListItem key={index}>
+                                        <ListItemButton>
+                                            <ListItemIcon>{Object.values(item)[0]}</ListItemIcon>
+                                            <ListItemText primary={Object.keys(item)[0]} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                )}
+                            </>
+                        ))}
+                    </>
+                ) : user.role === "Manager" ? (
+                    <>
+                        {managerDrawerList.map((item, index) => (
+                            <>
+                                {index === 4 ? (
+                                    <>
+                                        <Divider />
+                                        <ListItem key={index}>
+                                            <ListItemButton>
+                                                <ListItemIcon>{Object.values(item)[0]}</ListItemIcon>
+                                                <ListItemText primary={Object.keys(item)[0]} />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    </>
+                                ) : (
+                                    <ListItem key={index}>
+                                        <ListItemButton>
+                                            <ListItemIcon>{Object.values(item)[0]}</ListItemIcon>
+                                            <ListItemText primary={Object.keys(item)[0]} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                )}
+                            </>
+                        ))}
+                    </>
+                ) : user.role === "User" ? (
+                    <>
+                        {inventoryDrawerListUserPart.map((item, index) => (
+                            <ListItem key={index}>
+                                <ListItemButton>
+                                    <ListItemIcon>{Object.values(item)[0]}</ListItemIcon>
+                                    <ListItemText primary={Object.keys(item)[0]} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </>
+                ) : (
+                    null
+                )}
+            </List>
+        </Box>
+    );
 
     async function getUser() {
         const response = await fetch("api/auth/check", {
@@ -44,62 +163,74 @@ function App() {
         getUser();
     }, [location.pathname]);
 
+    useEffect(() => {
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
     const isVerificationPage = location.pathname.startsWith('/verify');
+    const isLoginPage = location.pathname.startsWith('/login');
 
     return (
-        <div className="App">
-            <div className="header">
-                <div className="header-title">
+        <ThemeProvider theme={themes[theme] || themes.light}>
+            <CssBaseline />
+            <div className="App">
+                <header style={{ backgroundColor: themes[theme].palette.background.default, color: themes[theme].palette.text.primary }} className="header">
                     <Link to="/">
-                        <h1 style={{ color: "white" }}>Raktár Manager</h1>
+                        <h1 style={{ color: themes[theme].palette.text.primary }}>Raktár Manager</h1>
                     </Link>
-                </div>
-                <ButtonGroup variant="outlined" size="large" aria-label="header button group">
-                    {!isVerificationPage && (
-                        <>
-                            {!user ? (
-                                <Link to="/login">
-                                    <Button startIcon={<LoginIcon />}>Belépés</Button>
-                                </Link>
-                            ) : user.role === "Admin" || user.role === "Manager" ? (
-                                <>
-                                    <LogoutButton />
-                                    <Link to="/registration">
-                                        <Button startIcon={<PersonAddIcon />}>Regisztráció</Button>
+                    <ButtonGroup variant="outlined" size="large" aria-label="header button group">
+                        {!isVerificationPage && !isLoginPage && (
+                            <>
+                                {!user ? (
+                                    <Link to="/login">
+                                        <Button startIcon={<LoginIcon />}>Belépés</Button>
                                     </Link>
-                                    <Link to="/employees">
-                                        <Button startIcon={<GroupsIcon />}>Alkalmazottak</Button>
-                                    </Link>
-                                    <Link to="/profile">
-                                        <Button startIcon={<ManageAccountsIcon />}>Profil</Button>
-                                    </Link>
-                                    <Link to="/inventory">
-                                        <Button startIcon={<WarehouseIcon />}>Raktár</Button>
-                                    </Link>
-                                </>
-                            ) : (
-                                <>
-                                    <LogoutButton />
-                                    <Link to="/profile">
-                                        <Button startIcon={<ManageAccountsIcon />}>Profil</Button>
-                                    </Link>
-                                    <Link to="/inventory">
-                                        <Button startIcon={<WarehouseIcon />}>Raktár</Button>
-                                    </Link>
-                                </>
-                            )}
-                        </>
-                    )}
-                </ButtonGroup>
+                                ) : user.role === "Admin" || user.role === "Manager" ? (
+                                    <>
+                                        <ThemeSelect currentTheme={theme} setTheme={setTheme} />
+                                        <LogoutButton />
+                                        <Link to="/registration">
+                                            <Button startIcon={<PersonAddIcon />}>Regisztráció</Button>
+                                        </Link>
+                                        <Link to="/employees">
+                                            <Button startIcon={<GroupsIcon />}>Alkalmazottak</Button>
+                                        </Link>
+                                        <Link to="/profile">
+                                            <Button startIcon={<ManageAccountsIcon />}>Profil</Button>
+                                        </Link>
+                                        <Button startIcon={<WarehouseIcon />} onClick={() => toggleDrawer(true)}>Raktár</Button>
+                                        <Drawer anchor={'right'} open={open} onClose={() => toggleDrawer(false)}>
+                                            {InventoryDrawerList}
+                                        </Drawer>
+                                    </>
+                                ) : (
+                                    <>
+                                        <ThemeSelect currentTheme={theme} setTheme={setTheme} />
+                                        <LogoutButton />
+                                        <Link to="/profile">
+                                            <Button startIcon={<ManageAccountsIcon />}>Profil</Button>
+                                        </Link>
+                                        <Button startIcon={<WarehouseIcon />} onClick={() => toggleDrawer(true)}>Raktár</Button>
+                                        <Drawer anchor={'right'} open={open} onClose={() => toggleDrawer(false)}>
+                                            {InventoryDrawerList}
+                                        </Drawer>
+                                    </>
+                                )}
+                            </>
+                        )}
+                    </ButtonGroup>
+                </header>
+                <main style={{ backgroundColor: themes[theme].palette.background.default, color: themes[theme].palette.text.primary }}>
+                    <Outlet />
+                </main>
+                <footer style={{ backgroundColor: themes[theme].palette.background.default, color: themes[theme].palette.text.primary }} className="footer">
+                    <p>© 2024 Raktár Manager</p>
+                    <p>Created by: EM&EM Software</p>
+                    <p>Contact: <a href="mailto:emandemsoftware@gmail.com">emandemsoftware@gmail.com</a></p>
+                    <p>(Under registration)</p>
+                </footer>
             </div>
-            <Outlet />
-            <div className="footer">
-                <p>© 2024 Raktár Manager</p>
-                <p>Created by: EM&EM Software</p>
-                <p>Contact: <a href="mailto:emandemsoftware@gmail.com">emandemsoftware@gmail.com</a></p>
-                <p>(Under registration)</p>
-            </div>
-        </div>
+        </ThemeProvider>
     );
 }
 
