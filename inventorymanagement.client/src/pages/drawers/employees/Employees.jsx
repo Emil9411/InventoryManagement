@@ -2,10 +2,10 @@
 import { Button, Table, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import LoadingCircle from '../components/LoadingCircle';
-import '../index.css';
+import LoadingCircle from '../../../components/LoadingCircle';
+import '../../../index.css';
 import swal from 'sweetalert';
-import handleUpdateEmployeeData from '../utils/employeeUpdate.jsx';
+import handleUpdateEmployeeData from '../../../utils/employeeUpdate.jsx';
 
 function Employees() {
     const [employees, setEmployees] = useState([]);

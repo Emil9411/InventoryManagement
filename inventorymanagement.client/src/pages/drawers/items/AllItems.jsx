@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import "../index.css";
+import "../../../index.css";
 
 function AllItems() {
     const [items, setItems] = useState([]);
@@ -39,7 +39,7 @@ function AllItems() {
         );
     }
     return (
-        <p>Hello world!</p>
+        <p>Hello world! all items</p>
     );
 }
 

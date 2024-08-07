@@ -1,10 +1,9 @@
-﻿import React from 'react';
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Select, MenuItem, Typography, Grid, Paper, Box } from '@mui/material';
 import { PersonAdd as PersonAddIcon } from '@mui/icons-material';
 import swal from 'sweetalert';
-import "../index.css";
+import "../../../index.css";
 
 function Registration() {
     const [email, setEmail] = useState("");
