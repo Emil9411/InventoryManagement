@@ -1,6 +1,6 @@
 ﻿import { useEffect, useState } from 'react';
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { Button, ButtonGroup, Box, Drawer, List, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText, ThemeProvider, CssBaseline } from '@mui/material';
+import { Button, ButtonGroup, Box, Drawer, List, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText, ThemeProvider, CssBaseline, Typography } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -174,9 +174,9 @@ function App() {
         <ThemeProvider theme={themes[theme] || themes.light}>
             <CssBaseline />
             <div className="App">
-                <header style={{ backgroundColor: themes[theme].palette.background.default, color: themes[theme].palette.text.primary }} className="header">
+                <header style={{ backgroundColor: themes[theme].palette.background.default, color: themes[theme].palette.text.primary }}>
                     <Link to="/">
-                        <h1 style={{ color: themes[theme].palette.text.primary }}>Raktár Manager</h1>
+                        <Typography variant="h1" sx={{ color: themes[theme].palette.text.primary }}>Raktár Manager</Typography>
                     </Link>
                     <ButtonGroup variant="outlined" size="large" aria-label="header button group">
                         {!isVerificationPage && !isLoginPage && (
@@ -187,30 +187,30 @@ function App() {
                                     </Link>
                                 ) : user.role === "Admin" || user.role === "Manager" ? (
                                     <>
-                                        <ThemeSelect currentTheme={theme} setTheme={setTheme} />
+                                        <ThemeSelect sx={{ mx: 1 }} currentTheme={theme} setTheme={setTheme} />
                                         <LogoutButton />
                                         <Link to="/registration">
-                                            <Button startIcon={<PersonAddIcon />}>Regisztráció</Button>
+                                            <Button sx={{ mx: 1 }} startIcon={<PersonAddIcon />}>Regisztráció</Button>
                                         </Link>
                                         <Link to="/employees">
-                                            <Button startIcon={<GroupsIcon />}>Alkalmazottak</Button>
+                                            <Button sx={{ mx: 1 }} startIcon={<GroupsIcon />}>Alkalmazottak</Button>
                                         </Link>
                                         <Link to="/profile">
-                                            <Button startIcon={<ManageAccountsIcon />}>Profil</Button>
+                                            <Button sx={{ mx: 1 }} startIcon={<ManageAccountsIcon />}>Profil</Button>
                                         </Link>
-                                        <Button startIcon={<WarehouseIcon />} onClick={() => toggleDrawer(true)}>Raktár</Button>
+                                        <Button sx={{ mx: 1 }} startIcon={<WarehouseIcon />} onClick={() => toggleDrawer(true)}>Raktár</Button>
                                         <Drawer anchor={'right'} open={open} onClose={() => toggleDrawer(false)}>
                                             {InventoryDrawerList}
                                         </Drawer>
                                     </>
                                 ) : (
                                     <>
-                                        <ThemeSelect currentTheme={theme} setTheme={setTheme} />
+                                        <ThemeSelect sx={{ mx: 1 }} currentTheme={theme} setTheme={setTheme} />
                                         <LogoutButton />
                                         <Link to="/profile">
-                                            <Button startIcon={<ManageAccountsIcon />}>Profil</Button>
+                                            <Button sx={{ mx: 1 }} startIcon={<ManageAccountsIcon />}>Profil</Button>
                                         </Link>
-                                        <Button startIcon={<WarehouseIcon />} onClick={() => toggleDrawer(true)}>Raktár</Button>
+                                        <Button sx={{ mx: 1 }} startIcon={<WarehouseIcon />} onClick={() => toggleDrawer(true)}>Raktár</Button>
                                         <Drawer anchor={'right'} open={open} onClose={() => toggleDrawer(false)}>
                                             {InventoryDrawerList}
                                         </Drawer>
@@ -223,11 +223,11 @@ function App() {
                 <main style={{ backgroundColor: themes[theme].palette.background.default, color: themes[theme].palette.text.primary }}>
                     <Outlet />
                 </main>
-                <footer style={{ backgroundColor: themes[theme].palette.background.default, color: themes[theme].palette.text.primary }} className="footer">
-                    <p>© 2024 Raktár Manager</p>
-                    <p>Created by: EM&EM Software</p>
-                    <p>Contact: <a href="mailto:emandemsoftware@gmail.com">emandemsoftware@gmail.com</a></p>
-                    <p>(Under registration)</p>
+                <footer style={{ backgroundColor: themes[theme].palette.background.default, color: themes[theme].palette.text.primary }}>
+                    <Typography variant="subtitle1">© 2024 Raktár Manager</Typography>
+                    <Typography variant="subtitle1">Created by: EM&EM Software</Typography>
+                    <Typography variant="subtitle1">Contact: <a href="mailto:emandemsoftware@gmail.com">emandemsoftware@gmail.com</a></Typography>
+                    <Typography variant="subtitle1">(Under registration)</Typography>
                 </footer>
             </div>
         </ThemeProvider>

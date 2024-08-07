@@ -2,6 +2,7 @@ import { createTheme } from '@mui/material/styles';
 
 export const themes = {
     light: createTheme({
+        spacing: 4,
         palette: {
             mode: 'light',
             primary: { main: '#1976d2' },
@@ -15,6 +16,7 @@ export const themes = {
         },
     }),
     dark: createTheme({
+        spacing: 4,
         palette: {
             mode: 'dark',
             primary: { main: '#90caf9' },

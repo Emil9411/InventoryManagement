@@ -1,9 +1,10 @@
-﻿import { useState } from 'react';
+﻿import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import "../index.css";
+import { Button, TextField, Select, MenuItem, Typography, Grid, Paper, Box } from '@mui/material';
+import { PersonAdd as PersonAddIcon } from '@mui/icons-material';
 import swal from 'sweetalert';
+import "../index.css";
 
 function Registration() {
     const [email, setEmail] = useState("");
@@ -43,7 +44,7 @@ function Registration() {
                     button: "OK"
                 }).then(() => {
                     navigate("/");
-                })
+                });
             } else {
                 swal({
                     title: "Regisztráció sikertelen",
@@ -59,57 +60,86 @@ function Registration() {
     }
 
     return (
-        <div className="login-page">
-            <h2>Regisztráció</h2>
-            <form onSubmit={handleSubmit}>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                {formSubmitted && email === "" ? <p style={{ color: "red" }}>Email szükséges</p> : <p>Email:</p>}
-                            </td>
-                            <td>
-                                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                {formSubmitted && username === "" ? <p style={{ color: "red" }}>Felhasználónév szükséges</p> : <p>Felhasználónév:</p>}
-                            </td>
-                            <td>
-                                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                {formSubmitted && password === "" ? <p style={{ color: "red" }}>Jelszó szükséges</p> : <p>Jelszó:</p>}
-                            </td>
-                            <td>
-                                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                {formSubmitted && role === "" ? <p style={{ color: "red" }}>Szerepkör szükséges</p> : <p>Szerepkör:</p>}
-                            </td>
-                            <td>
-                                <select value={role} onChange={(e) => setRole(e.target.value)}>
-                                    <option disabled value="">Válassz...</option>
-                                    <option value="Admin">Admin</option>
-                                    <option value="Manager">Manager</option>
-                                    <option value="User">User</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan="2">
-                                <Button variant='outlined' startIcon={<PersonAddIcon />} type="submit">Regisztráció</Button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
-        </div>
+        <Box display="flex" alignItems="center" justifyContent="center" minHeight="fit-content">
+            <Paper elevation={3} sx={{ maring: 6, padding: 6, maxWidth: 400, width: '100%' }}>
+                <Typography variant="h3" align="center" gutterBottom>Regisztráció</Typography>
+                <Grid container spacing={2} direction="column" justifyContent="center" alignItems="center">
+                    <Grid item xs={12}>
+                        {formSubmitted && email === "" ? (
+                            <Typography color="error">Email szükséges</Typography>
+                        ) : (
+                            <Typography>Email:</Typography>
+                        )}
+                        <TextField
+                            fullWidth
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            variant="outlined"
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        {formSubmitted && username === "" ? (
+                            <Typography color="error">Felhasználónév szükséges</Typography>
+                        ) : (
+                            <Typography>Felhasználónév:</Typography>
+                        )}
+                        <TextField
+                            fullWidth
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            variant="outlined"
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        {formSubmitted && password === "" ? (
+                            <Typography color="error">Jelszó szükséges</Typography>
+                        ) : (
+                            <Typography>Jelszó:</Typography>
+                        )}
+                        <TextField
+                            fullWidth
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            variant="outlined"
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        {formSubmitted && role === "" ? (
+                            <Typography color="error">Szerepkör szükséges</Typography>
+                        ) : (
+                            <Typography>Szerepkör:</Typography>
+                        )}
+                        <Select
+                            fullWidth
+                            value={role}
+                            onChange={(e) => setRole(e.target.value)}
+                            displayEmpty
+                            variant="outlined"
+                        >
+                            <MenuItem disabled value="">
+                                <em>Válassz...</em>
+                            </MenuItem>
+                            <MenuItem value="Admin">Admin</MenuItem>
+                            <MenuItem value="Manager">Manager</MenuItem>
+                            <MenuItem value="User">User</MenuItem>
+                        </Select>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                            fullWidth
+                            variant="outlined"
+                            startIcon={<PersonAddIcon />}
+                            onClick={handleSubmit}
+                        >
+                            Regisztráció
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Paper>
+        </Box>
     );
 }
 

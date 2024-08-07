@@ -45,7 +45,7 @@ function LogoutButton() {
     }
     return (
         <>
-            <Button onClick={handleLogout} startIcon={<LogoutIcon />}>Kilépés</Button>
+            <Button sx={{ mx: 1 }} onClick={handleLogout} startIcon={<LogoutIcon />}>Kilépés</Button>
         </>
     );
 }

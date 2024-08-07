@@ -82,8 +82,8 @@ function Employees() {
     }
 
     return (
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650, width: '80vw', marginLeft: 'auto', marginRight: 'auto' }} aria-label="employee table">
+        <TableContainer component={Paper} sx={{ padding: 6, width: '90vw', marginLeft: 'auto', marginRight: 'auto', marginTop: 6, marginBottom: 6 }}>
+                <Table sx={{ width: '80vw', marginLeft: 'auto', marginRight: 'auto' }} aria-label="employee table">
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ fontWeight: 'bold' }}>Vezetéknév</TableCell>

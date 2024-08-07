@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 
 const ThemeSelect = ({ currentTheme, setTheme }) => {
@@ -8,7 +8,7 @@ const ThemeSelect = ({ currentTheme, setTheme }) => {
 
     return (
         <FormControl variant="outlined" size="small">
-            <InputLabel id="theme-select-label">Theme</InputLabel>
+            <InputLabel id="theme-select-label">Téma</InputLabel>
             <Select
                 labelId="theme-select-label"
                 id="theme-select"
@@ -18,7 +18,7 @@ const ThemeSelect = ({ currentTheme, setTheme }) => {
             >
                 {['light', 'dark'].map((theme) => (
                     <MenuItem key={theme} value={theme}>
-                        {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                        {theme === 'light' ? 'Világos' : 'Sötét'}
                     </MenuItem>
                 ))}
             </Select>
