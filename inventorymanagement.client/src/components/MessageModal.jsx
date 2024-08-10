@@ -7,7 +7,7 @@ const modalStyle = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: '25vw',
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 4,
@@ -38,6 +38,7 @@ function MessageModal({ open, onClose, title, children, actions }){
                                 color={action.color || 'primary'}
                                 variant={action.variant || 'contained'}
                                 sx={{ ml: index > 0 ? 2 : 0 }}
+                                startIcon={action.startIcon}
                             >
                                 {action.label}
                             </Button>
@@ -60,6 +61,7 @@ MessageModal.propTypes = {
             onClick: PropTypes.func.isRequired,
             color: PropTypes.string,
             variant: PropTypes.string,
+            startIcon: PropTypes.element,
         })
     ),
 };
