@@ -35,242 +35,61 @@ function App() {
         setOpen(newOpen);
     }
 
+    const commonItems = [
+        { to: "/allitems", icon: <WarehouseIcon />, text: "Raktárkészlet" },
+        { to: "/ingredients", icon: <EggIcon />, text: "Hozzávalók" },
+        { to: "/products", icon: <KitchenIcon />, text: "Termékek" },
+        { to: "/consumables", icon: <HowToVoteIcon />, text: "Fogyócikkek" },
+        { to: "/nonconsumables", icon: <RestaurantIcon />, text: "Tartós cikkek" },
+        { to: "/equipments", icon: <OutdoorGrillIcon />, text: "Felszerelések" },
+        { to: "/tools", icon: <BlenderIcon />, text: "Eszközök" },
+        { to: "/orderlist", icon: <ChecklistIcon />, text: "Rendelési lista" },
+    ];
+
+    const adminItems = [
+        { to: "/addwarehouse", icon: <AddLocationAltIcon />, text: "Új raktár hozzáadása" },
+        { to: "/warehouses", icon: <MapIcon />, text: "Összes raktár listázása" },
+        { to: "/updatewarehouse", icon: <EditLocationAltIcon />, text: "Raktár adatok frissítése" },
+        { to: "/deletewarehouse", icon: <WrongLocationIcon />, text: "Raktár törlése" },
+        { to: "/inventory", icon: <FmdGoodIcon />, text: "Raktár adatok" },
+        { to: "/employees", icon: <GroupsIcon />, text: "Alkalmazottak" },
+        { to: "/registration", icon: <PersonAddIcon />, text: "Alkalmazott hozzáadása" },
+        { to: "/removeemployee", icon: <PersonRemoveIcon />, text: "Alkalmazott törlése" },
+    ];
+
+    const managerItems = [
+        { to: "/inventory", icon: <FmdGoodIcon />, text: "Raktár adatok" },
+        { to: "/employees", icon: <GroupsIcon />, text: "Alkalmazottak" },
+        { to: "/registration", icon: <PersonAddIcon />, text: "Alkalmazott hozzáadása" },
+        { to: "/removeemployee", icon: <PersonRemoveIcon />, text: "Alkalmazott törlése" },
+    ];
+
+    const roleItems = {
+        Admin: adminItems,
+        Manager: managerItems,
+        User: [],
+    };
+
     const InventoryDrawerList = (
         <Box sx={{ width: '20vw' }} role="presentation" onClick={() => toggleDrawer(false)}>
             <List>
-                {user === null ? (
-                    null
-                ) : user.role === "Admin" ? (
-                    <>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/addwarehouse">
-                                <ListItemIcon><AddLocationAltIcon /></ListItemIcon>
-                                <ListItemText primary={"Új raktár hozzáadása"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/warehouses">
-                                <ListItemIcon><MapIcon /></ListItemIcon>
-                                <ListItemText primary={"Összes raktár listázása"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/updatewarehouse">
-                                <ListItemIcon><EditLocationAltIcon /></ListItemIcon>
-                                <ListItemText primary={"Raktár adatok frissítése"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/deletewarehouse">
-                                <ListItemIcon><WrongLocationIcon /></ListItemIcon>
-                                <ListItemText primary={"Raktár törlése"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
-                            <ListItemButton component={Link} to="/inventory">
-                                <ListItemIcon><FmdGoodIcon /></ListItemIcon>
-                                <ListItemText primary={"Raktár adatok"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/employees">
-                                <ListItemIcon><GroupsIcon /></ListItemIcon>
-                                <ListItemText primary={"Alkalmazottak"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/registration">
-                                <ListItemIcon><PersonAddIcon /></ListItemIcon>
-                                <ListItemText primary={"Alkalmazott hozzáadása"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/removeemployee">
-                                <ListItemIcon><PersonRemoveIcon /></ListItemIcon>
-                                <ListItemText primary={"Alkalmazott törlése"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
-                            <ListItemButton component={Link} to="/allitems">
-                                <ListItemIcon><WarehouseIcon /></ListItemIcon>
-                                <ListItemText primary={"Raktárkészlet"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/ingredients">
-                                <ListItemIcon><EggIcon /></ListItemIcon>
-                                <ListItemText primary={"Hozzávalók"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/products">
-                                <ListItemIcon><KitchenIcon /></ListItemIcon>
-                                <ListItemText primary={"Termékek"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/consumables">
-                                <ListItemIcon><HowToVoteIcon /></ListItemIcon>
-                                <ListItemText primary={"Fogyócikkek"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/nonconsumables">
-                                <ListItemIcon><RestaurantIcon /></ListItemIcon>
-                                <ListItemText primary={"Tartós cikkek"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/equipments">
-                                <ListItemIcon><OutdoorGrillIcon /></ListItemIcon>
-                                <ListItemText primary={"Felszerelések"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/tools">
-                                <ListItemIcon><BlenderIcon /></ListItemIcon>
-                                <ListItemText primary={"Eszközök"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/orderlist">
-                                <ListItemIcon><ChecklistIcon /></ListItemIcon>
-                                <ListItemText primary={"Rendelési lista"} />
-                            </ListItemButton>
-                        </ListItem>
-                    </>
-                ) : user.role === "Manager" ? (
-                    <>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/inventory">
-                                <ListItemIcon><FmdGoodIcon /></ListItemIcon>
-                                <ListItemText primary={"Raktár adatok"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/employees">
-                                <ListItemIcon><GroupsIcon /></ListItemIcon>
-                                <ListItemText primary={"Alkalmazottak"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/registration">
-                                <ListItemIcon><PersonAddIcon /></ListItemIcon>
-                                <ListItemText primary={"Alkalmazott hozzáadása"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/removeemployee">
-                                <ListItemIcon><PersonRemoveIcon /></ListItemIcon>
-                                <ListItemText primary={"Alkalmazott törlése"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
-                            <ListItemButton component={Link} to="/allitems">
-                                <ListItemIcon><WarehouseIcon /></ListItemIcon>
-                                <ListItemText primary={"Raktárkészlet"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/ingredients">
-                                <ListItemIcon><EggIcon /></ListItemIcon>
-                                <ListItemText primary={"Hozzávalók"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/products">
-                                <ListItemIcon><KitchenIcon /></ListItemIcon>
-                                <ListItemText primary={"Termékek"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/consumables">
-                                <ListItemIcon><HowToVoteIcon /></ListItemIcon>
-                                <ListItemText primary={"Fogyócikkek"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/nonconsumables">
-                                <ListItemIcon><RestaurantIcon /></ListItemIcon>
-                                <ListItemText primary={"Tartós cikkek"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/equipments">
-                                <ListItemIcon><OutdoorGrillIcon /></ListItemIcon>
-                                <ListItemText primary={"Felszerelések"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/tools">
-                                <ListItemIcon><BlenderIcon /></ListItemIcon>
-                                <ListItemText primary={"Eszközök"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/orderlist">
-                                <ListItemIcon><ChecklistIcon /></ListItemIcon>
-                                <ListItemText primary={"Rendelési lista"} />
-                            </ListItemButton>
-                        </ListItem>
-                    </>
-                ) : user.role === "User" ? (
-                    <>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/allitems">
-                                <ListItemIcon><WarehouseIcon /></ListItemIcon>
-                                <ListItemText primary={"Raktárkészlet"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/ingredients">
-                                <ListItemIcon><EggIcon /></ListItemIcon>
-                                <ListItemText primary={"Hozzávalók"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/products">
-                                <ListItemIcon><KitchenIcon /></ListItemIcon>
-                                <ListItemText primary={"Termékek"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/consumables">
-                                <ListItemIcon><HowToVoteIcon /></ListItemIcon>
-                                <ListItemText primary={"Fogyócikkek"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/nonconsumables">
-                                <ListItemIcon><RestaurantIcon /></ListItemIcon>
-                                <ListItemText primary={"Tartós cikkek"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/equipments">
-                                <ListItemIcon><OutdoorGrillIcon /></ListItemIcon>
-                                <ListItemText primary={"Felszerelések"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/tools">
-                                <ListItemIcon><BlenderIcon /></ListItemIcon>
-                                <ListItemText primary={"Eszközök"} />
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemButton component={Link} to="/orderlist">
-                                <ListItemIcon><ChecklistIcon /></ListItemIcon>
-                                <ListItemText primary={"Rendelési lista"} />
-                            </ListItemButton>
-                        </ListItem>
-                    </>
-                ) : (
-                    null
-                )}
+                {user && roleItems[user.role]?.map((item, index) => (
+                    <ListItem key={index}>
+                        <ListItemButton component={Link} to={item.to}>
+                            <ListItemIcon>{item.icon}</ListItemIcon>
+                            <ListItemText primary={item.text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+                {user && <Divider />}
+                {user && commonItems.map((item, index) => (
+                    <ListItem key={index}>
+                        <ListItemButton component={Link} to={item.to}>
+                            <ListItemIcon>{item.icon}</ListItemIcon>
+                            <ListItemText primary={item.text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
             </List>
         </Box>
     );
