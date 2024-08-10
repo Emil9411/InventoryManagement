@@ -1,13 +1,25 @@
 ﻿import { useNavigate, useLocation } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import { useState } from 'react';
+import { Button, Typography } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
-import swal from 'sweetalert';
+import CloseIcon from '@mui/icons-material/Close';
+import MessageModal from './MessageModal';
 
 function LogoutButton() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    async function handleLogout() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleOpen = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleClose = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleConfirm = async () => {
         try {
             const response = await fetch("api/auth/logout", {
                 method: "POST",
@@ -20,32 +32,32 @@ function LogoutButton() {
             if (!response.ok) {
                 throw new Error("Logout failed");
             } else {
+                setIsModalOpen(false);
                 if (location.pathname !== "/") {
-                    swal({
-                        title: "Sikeres kilépés",
-                        icon: "success",
-                        button: "OK"
-                    }).then(() => {
-                        navigate("/");
-                        window.location.reload();
-                    })
-                } else {
-                    swal({
-                        title: "Sikeres kilépés",
-                        icon: "success",
-                        button: "OK"
-                    }).then(() => {
-                        window.location.reload();
-                    })
+                    navigate("/");
                 }
+                window.location.reload();
             }
         } catch (error) {
-            console.error(error);
+            console.error("Logout Error:", error);
         }
-    }
+    };
+
     return (
         <>
-            <Button sx={{ mx: 1 }} onClick={handleLogout} startIcon={<LogoutIcon />}>Kilépés</Button>
+            <Button sx={{ mx: 1 }} onClick={handleOpen} startIcon={<LogoutIcon />}>
+                Kilépés
+            </Button>
+            <MessageModal
+                open={isModalOpen}
+                onClose={handleClose}
+                title="Biztosan kilép?"
+                actions={[
+                    { label: 'Kilépés', onClick: handleConfirm, color: 'primary', startIcon: <LogoutIcon /> },
+                    { label: 'Bezár', onClick: handleClose , color: 'secondary', startIcon: <CloseIcon /> }
+                ]}
+            >
+            </MessageModal>
         </>
     );
 }
