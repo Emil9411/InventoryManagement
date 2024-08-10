@@ -1,102 +1,136 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import { Button, TextField, Box, Typography, Grid } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
-import "../index.css";
-import swal from 'sweetalert';
+import DoneIcon from '@mui/icons-material/Done';
+import MessageModal from '../components/MessageModal';
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [formSubmitted, setFormSubmitted] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', message: '', actions: [] });
+
     const navigate = useNavigate();
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     async function handleSubmit(event) {
         event.preventDefault();
         setFormSubmitted(true);
+
         if (!email || !password) {
+            setModalContent({
+                title: 'Hiba',
+                message: 'Minden mező kitöltése kötelező!',
+                actions: [{ label: 'OK', onClick: handleCloseModal, startIcon: <CloseIcon /> }]
+            });
+            setIsModalOpen(true);
             return;
         }
+
         try {
             const response = await fetch("api/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    email,
-                    password
-                }),
+                body: JSON.stringify({ email, password }),
             });
 
             if (response.ok) {
-                swal({
-                    title: "Sikeres belépés",
-                    text: "",
-                    icon: "success",
-                    button: "OK"
-                }).then(() => {
-                    navigate("/");
-                })
-            } else {
-                swal({
-                    title: "Belépés sikertelen",
-                    text: "Helytelen email/jelszó",
-                    icon: "error",
-                    button: "OK"
+                setModalContent({
+                    title: 'Sikeres belépés!',
+                    message: '',
+                    actions: [{
+                        label: 'OK', onClick: () => {
+                            handleCloseModal();
+                            navigate("/");
+                        },
+                        startIcon: <DoneIcon />,
+                    }]
                 });
-                throw new Error("Login failed");
+            } else {
+                setModalContent({
+                    title: 'Bejelentkezés sikertelen',
+                    message: 'Helytelen email vagy jelszó.',
+                    actions: [{ label: 'OK', onClick: handleCloseModal, startIcon: <CloseIcon /> }]
+                });
             }
         } catch (error) {
             console.error(error);
+            setModalContent({
+                title: 'Hiba',
+                message: 'Hiba történt bejelentkezéskor. Kérjük próbálja újra.',
+                actions: [{ label: 'OK', onClick: handleCloseModal, startIcon: <CloseIcon /> }]
+            });
+        } finally {
+            setIsModalOpen(true);
         }
     }
+
     return (
-        <div className="login-page">
-            <h2>Belépés</h2>
-            <form onSubmit={handleSubmit}>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                {formSubmitted && email === "" ? <p style={{ color: "red" }}>Email szükséges</p> : <p>Email:</p>}
-                            </td>
-                            <td>
-                                <input
-                                    type="text"
-                                    value={email}
-                                    onChange={(event) => setEmail(event.target.value)}
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                {formSubmitted && password === "" ? <p style={{ color: "red" }}>Jelszó szükséges</p> : <p>Jelszó:</p>}
-                            </td>
-                            <td>
-                                <input
-                                    type="password"
-                                    value={password}
-                                    onChange={(event) => setPassword(event.target.value)}
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <Button variant='outlined' startIcon={<CloseIcon />} onClick={() => navigate("/")} type="button">Bezár</Button>
-                            </td>
-                            <td>
-                                <Button variant='outlined' startIcon={<LoginIcon />}type="submit">Belépés</Button>
-                            </td>
-                        </tr>
-                        <tr rowSpan="2">
-                            <td colSpan="2"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
-        </div>
+        <Grid container justifyContent="center" alignItems="center" style={{ marginTop: '5%', marginBottom: '5%' }}>
+            <Grid item xs={12} sm={8} md={4}>
+                <Box p={3} boxShadow={3} borderRadius={2} bgcolor="background.paper">
+                    <Typography variant="h4" component="h1" align="center" gutterBottom>
+                        Belépés
+                    </Typography>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            fullWidth
+                            label="Email"
+                            variant="outlined"
+                            margin="normal"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            error={formSubmitted && email === ""}
+                            helperText={formSubmitted && email === "" ? "Email szükséges" : ""}
+                        />
+                        <TextField
+                            fullWidth
+                            label="Jelszó"
+                            variant="outlined"
+                            type="password"
+                            margin="normal"
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
+                            error={formSubmitted && password === ""}
+                            helperText={formSubmitted && password === "" ? "Jelszó szükséges" : ""}
+                        />
+                        <Box mt={2} display="flex" justifyContent="space-between">
+                            <Button
+                                variant="outlined"
+                                startIcon={<CloseIcon />}
+                                onClick={() => navigate("/")}
+                                type="button"
+                            >
+                                Bezár
+                            </Button>
+                            <Button
+                                variant="contained"
+                                startIcon={<LoginIcon />}
+                                type="submit"
+                            >
+                                Belépés
+                            </Button>
+                        </Box>
+                    </form>
+                </Box>
+            </Grid>
+            <MessageModal
+                open={isModalOpen}
+                onClose={handleCloseModal}
+                title={modalContent.title}
+                actions={modalContent.actions}
+            >
+                <Typography>{modalContent.message}</Typography>
+            </MessageModal>
+        </Grid>
     );
 }
 
