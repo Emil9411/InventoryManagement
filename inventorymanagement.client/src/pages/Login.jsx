@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Box, Typography, Grid } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import LoginIcon from '@mui/icons-material/Login';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
@@ -12,6 +13,7 @@ function Login() {
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState({ title: '', message: '', actions: [] });
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -33,6 +35,7 @@ function Login() {
             return;
         }
 
+        setLoading(true);
         try {
             const response = await fetch("api/auth/login", {
                 method: "POST",
@@ -69,6 +72,7 @@ function Login() {
                 actions: [{ label: 'OK', onClick: handleCloseModal, startIcon: <CloseIcon /> }]
             });
         } finally {
+            setLoading(false);
             setIsModalOpen(true);
         }
     }
@@ -111,13 +115,15 @@ function Login() {
                             >
                                 Bezár
                             </Button>
-                            <Button
+                            <LoadingButton
                                 variant="contained"
                                 startIcon={<LoginIcon />}
                                 type="submit"
+                                loading={loading}
+                                loadingPosition="start"
                             >
                                 Belépés
-                            </Button>
+                            </LoadingButton>
                         </Box>
                     </form>
                 </Box>
