@@ -1,113 +1,78 @@
-﻿import swal from "sweetalert";
+﻿import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types'; // Import PropTypes
+import { Button, TextField, Typography, Grid, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Divider } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
+import ErrorIcon from '@mui/icons-material/Error';
+import MessageModal from '../components/MessageModal';
 
-function handleUpdateEmployeeData(selectedEmployee) {
-    const container = document.createElement("div");
-    container.innerHTML = `
-            <table>
-                <tbody>
-                    <tr>
-                        <td>Vezetéknév:</td>
-                        <td><input type="text" id="lastName" value="${selectedEmployee.lastName === null ? "" : selectedEmployee.lastName}"></td>
-                    </tr>
-                    <tr>
-                        <td>Keresztnév:</td>
-                        <td><input type="text" id="firstName" value="${selectedEmployee.firstName == null ? "" : selectedEmployee.firstName}"></td>
-                    </tr>
-                    <tr>
-                        <td>Város:</td>
-                        <td><input type="text" id="city" value="${selectedEmployee.city == null ? "" : selectedEmployee.city}"></td>
-                    </tr>
-                    <tr>
-                        <td>Irányítószám:</td>
-                        <td><input type="text" id="postalCode" value="${selectedEmployee.postalCode == null ? "" : selectedEmployee.postalCode}"></td>
-                    </tr>
-                    <tr>
-                        <td>Cím:</td>
-                        <td><input type="text" id="address" value="${selectedEmployee.address == null ? "" : selectedEmployee.address}"></td>
-                    </tr>
-                    <tr>
-                        <td>Telefonszám:</td>
-                        <td><input type="text" id="phoneNumber" value="${selectedEmployee.phoneNumber == null ? "" : selectedEmployee.phoneNumber}"></td>
-                    </tr>
-                    <tr>
-                        <td>Email:</td>
-                        <td><input type="text" id="email" value="${selectedEmployee.email}"></td>
-                    </tr>
-                    <tr>
-                        <td>Felhasználónév:</td>
-                        <td><input type="text" id="userName" value="${selectedEmployee.userName}"></td>
-                    </tr>
-                    <tr>
-                        <td>Szerepkör:</td>
-                        <td><input type="text" id="role" value="${selectedEmployee.role}" disabled></td>
-                    </tr>
-                    <tr>
-                        <td>Státusz:</td>
-                        <td><input type="text" id="emailConfirmed" value="${selectedEmployee.emailConfirmed ? "Aktív" : "Inaktív"}" disabled></td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
+function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
+    // Initialize formData with default values or values from selectedEmployee
+    const [formData, setFormData] = useState({
+        lastName: "",
+        firstName: "",
+        city: "",
+        postalCode: "",
+        address: "",
+        phoneNumber: "",
+        email: "",
+        userName: "",
+        role: "",
+        emailConfirmed: false
+    });
 
-    swal({
-        text: "Munkatárs adatainak módosítása",
-        content: container,
-        buttons: {
-            cancel: "Mégse",
-            confirm: {
-                text: "Módosítás",
-                closeModal: false,
-            },
-        },
-    }).then((value) => {
-        if (value) {
-            swal({
-                text: "Biztosan módosítja a munkatárs adatait?",
-                buttons: {
-                    cancel: "Mégse",
-                    confirm: {
-                        text: "Módosítás",
-                        closeModal: false,
-                    },
-                },
-            }).then(async (value) => {
-                if (value) {
-                    const updatedEmployeeData = {
-                        id: selectedEmployee.id,
-                        lastName: container.querySelector("#lastName").value,
-                        firstName: container.querySelector("#firstName").value,
-                        city: container.querySelector("#city").value,
-                        postalCode: container.querySelector("#postalCode").value,
-                        address: container.querySelector("#address").value,
-                        phoneNumber: container.querySelector("#phoneNumber").value,
-                        email: container.querySelector("#email").value,
-                        userName: container.querySelector("#userName").value,
-                        role: container.querySelector("#role").value,
-                        emailConfirmed: container.querySelector("#emailConfirmed").value === "Aktív",
-                    };
+    const [modalState, setModalState] = useState({
+        open: false,
+        title: '',
+        message: '',
+        actions: []
+    });
 
-                    // Check if any field is empty, if yes, reopens the modification window
-                    let hasEmptyField = false;
-                    for (const key in updatedEmployeeData) {
-                        if (updatedEmployeeData[key] === "") {
-                            hasEmptyField = true;
-                            break;
-                        }
-                    }
+    // Update formData when selectedEmployee changes
+    useEffect(() => {
+        if (selectedEmployee) {
+            setFormData({
+                lastName: selectedEmployee.lastName || "",
+                firstName: selectedEmployee.firstName || "",
+                city: selectedEmployee.city || "",
+                postalCode: selectedEmployee.postalCode || "",
+                address: selectedEmployee.address || "",
+                phoneNumber: selectedEmployee.phoneNumber || "",
+                email: selectedEmployee.email || "",
+                userName: selectedEmployee.userName || "",
+                role: selectedEmployee.role || "",
+                emailConfirmed: selectedEmployee.emailConfirmed || false
+            });
+        }
+    }, [selectedEmployee]);
 
-                    if (hasEmptyField) {
-                        swal("Minden mező kitöltése kötelező!", {
-                            icon: "error",
-                            buttons: {
-                                confirm: {
-                                    text: "OK",
-                                    closeModal: true,
-                                },
-                            },
-                        }).then(() => {
-                            handleUpdateEmployeeData(selectedEmployee);
-                        });
-                    } else {
+    const handleInputChange = (event) => {
+        const { id, value } = event.target;
+        setFormData(prevState => ({ ...prevState, [id]: value }));
+    };
+
+    const handleSubmit = async () => {
+        // Validate form fields
+        const hasEmptyField = Object.values(formData).some(value => value === "");
+        if (hasEmptyField) {
+            setModalState({
+                open: true,
+                title: "Minden mező kitöltése kötelező!",
+                message: "",
+                actions: [{ label: 'OK', onClick: () => setModalState({ ...modalState, open: false }), color: 'error', startIcon: <ErrorIcon /> }]
+            });
+            return;
+        }
+
+        setModalState({
+            open: true,
+            title: "Biztosan módosítja a munkatárs adatait?",
+            message: "",
+            actions: [
+                { label: 'Mégse', onClick: () => setModalState({ ...modalState, open: false }), color: 'secondary', startIcon: <CloseIcon /> },
+                {
+                    label: 'Módosítás',
+                    onClick: async () => {
                         try {
                             const response = await fetch("api/auth/update", {
                                 method: "PUT",
@@ -115,36 +80,111 @@ function handleUpdateEmployeeData(selectedEmployee) {
                                 headers: {
                                     "Content-Type": "application/json",
                                 },
-                                body: JSON.stringify(updatedEmployeeData),
+                                body: JSON.stringify({ ...formData, id: selectedEmployee.id }),
                             });
                             const data = await response.json();
                             if (data.success) {
-                                swal("Sikeres módosítás!", {
-                                    icon: "success",
-                                }).then(() => {
-                                    window.location.reload();
+                                setModalState({
+                                    open: true,
+                                    title: "Sikeres módosítás!",
+                                    message: "",
+                                    actions: [{ label: 'OK', onClick: () => window.location.reload(), color: 'success', startIcon: <DoneIcon /> }]
                                 });
                             } else {
-                                swal("Hiba történt a módosítás során!", {
-                                    icon: "error",
+                                setModalState({
+                                    open: true,
+                                    title: "Hiba történt a módosítás során!",
+                                    message: "",
+                                    actions: [{ label: 'OK', onClick: () => setModalState({ ...modalState, open: false }), color: 'error', startIcon: <ErrorIcon /> }]
                                 });
                             }
                         } catch (error) {
                             console.error(error);
+                            setModalState({
+                                open: true,
+                                title: "Hiba történt a módosítás során!",
+                                message: "Hiba: " + error.message,
+                                actions: [{ label: 'OK', onClick: () => setModalState({ ...modalState, open: false }), color: 'error', startIcon: <ErrorIcon /> }]
+                            });
                         }
-                    }
-                } else {
-                    swal("A módosítás megszakítva!", {
-                        icon: "info",
-                    });
+                    },
+                    color: 'primary',
+                    startIcon: <DoneIcon />
                 }
-            });
-        } else {
-            swal("A módosítás megszakítva!", {
-                icon: "info",
-            });
-        }
-    });
+            ]
+        });
+    };
+
+    if (!selectedEmployee) {
+        return null; // Optionally, show a loading indicator or a message if no employee is selected
+    }
+
+    return (
+        <>
+            <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+                <DialogTitle>
+                    Munkatárs adatainak módosítása
+                    <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close" sx={{ position: 'absolute', right: 20, top: 8 }}>
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <Divider />
+                <DialogContent>
+                    <Grid container spacing={2}>
+                        {Object.keys(formData).map((key) => (
+                            key !== 'id' && (
+                                <Grid item xs={10} key={key}>
+                                    <TextField
+                                        fullWidth
+                                        id={key}
+                                        label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim()}
+                                        value={formData[key]}
+                                        onChange={handleInputChange}
+                                        disabled={key === 'role' || key === 'emailConfirmed'}
+                                    />
+                                </Grid>
+                            )
+                        ))}
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose} variant="outlined" color="secondary">
+                        Mégse
+                    </Button>
+                    <Button onClick={handleSubmit} variant="contained" color="primary">
+                        Módosítás
+                    </Button>
+                </DialogActions>
+            </Dialog>
+            <MessageModal
+                open={modalState.open}
+                onClose={() => setModalState({ ...modalState, open: false })}
+                title={modalState.title}
+                actions={modalState.actions}
+            >
+                <Typography>{modalState.message}</Typography>
+            </MessageModal>
+        </>
+    );
 }
 
-export default handleUpdateEmployeeData;
+// Define PropTypes for the component
+UpdateEmployeeModal.propTypes = {
+    selectedEmployee: PropTypes.shape({
+        lastName: PropTypes.string,
+        firstName: PropTypes.string,
+        city: PropTypes.string,
+        postalCode: PropTypes.string,
+        address: PropTypes.string,
+        phoneNumber: PropTypes.string,
+        email: PropTypes.string,
+        userName: PropTypes.string,
+        role: PropTypes.string,
+        emailConfirmed: PropTypes.bool,
+        id: PropTypes.string
+    }),
+    open: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired
+};
+
+export default UpdateEmployeeModal;
