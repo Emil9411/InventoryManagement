@@ -10,7 +10,7 @@
         public string PostalCode { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public string ManagerId { get; set; }
+        public string? ManagerId { get; set; }
         public ICollection<AppUser>? Employees { get; set; }
         public ICollection<Item>? Items { get; set; }
     }
