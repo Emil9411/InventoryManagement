@@ -1,5 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, ButtonGroup, Box, Drawer, List, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText, ThemeProvider, CssBaseline, Typography } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -23,13 +23,16 @@ import './index.css';
 import { themes } from './utils/themes';
 import ThemeSelect from './components/ThemeSelect';
 import LogoutButton from './components/LogoutButton';
-import handleUpdateEmployeeData from './utils/employeeUpdate';
+import UpdateEmployeeModal from './utils/employeeUpdate';
 
 function App() {
     const [user, setUser] = useState(null);
     const [open, setOpen] = useState(false);
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalUser, setModalUser] = useState(null);
     const location = useLocation();
+    const navigate = useNavigate();
 
     function toggleDrawer(newOpen) {
         setOpen(newOpen);
@@ -94,28 +97,57 @@ function App() {
         </Box>
     );
 
+    async function deleteCookie() {
+        try {
+            const response = await fetch("api/auth/logout", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            if (!response.ok) {
+                throw new Error("Logout failed");
+            } else {
+                setModalOpen(false);
+                if (location.pathname !== "/") {
+                    navigate("/");
+                }
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error("Logout Error:", error);
+        }
+    }
+
     async function getUser() {
-        const response = await fetch("api/auth/check", {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const data = await response.json();
-        const userDataResponse = await fetch(`api/auth/user/${data.email}`, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const userData = await userDataResponse.json();
-        console.log(userData);
-        if (userData.firstName === null) {
-            handleUpdateEmployeeData(userData);
-        } else {
-            setUser(userData);
+        try {
+            const response = await fetch("api/auth/check", {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const data = await response.json();
+            const userDataResponse = await fetch(`api/auth/user/${data.email}`, {
+                method: "GET",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const userData = await userDataResponse.json();
+            console.log(userData);
+            if (userData.firstName === null) {
+                // Set modal state to show modal
+                setModalUser(userData);
+                setModalOpen(true);
+            } else {
+                setUser(userData);
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
 
@@ -190,6 +222,13 @@ function App() {
                     <Typography variant="subtitle1">Contact: <a href="mailto:emandemsoftware@gmail.com">emandemsoftware@gmail.com</a></Typography>
                     <Typography variant="subtitle1">(Under registration)</Typography>
                 </footer>
+                {modalUser && (
+                    <UpdateEmployeeModal
+                        selectedEmployee={modalUser}
+                        open={modalOpen}
+                        onClose={() => deleteCookie()}
+                    />
+                )}
             </div>
         </ThemeProvider>
     );
