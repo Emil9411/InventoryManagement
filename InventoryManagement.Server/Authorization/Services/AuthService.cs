@@ -120,7 +120,7 @@ namespace InventoryManagement.Server.Authorization.Services
             foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                userDtos.Add(new UserDto(user.Id, user.LastName, user.FirstName, user.City, user.PostalCode, user.Address, user.Email, user.PhoneNumber, user.UserName, roles[0], user.EmailConfirmed));
+                userDtos.Add(new UserDto(user.Id, user.LastName, user.FirstName, user.City, user.PostalCode, user.Address, user.Email, user.PhoneNumber, user.UserName, roles[0], user.InventoryId ?? 0, user.EmailConfirmed));
             }
             return userDtos;
         }
@@ -178,7 +178,7 @@ namespace InventoryManagement.Server.Authorization.Services
             }
 
             var roles = await _userManager.GetRolesAsync(user);
-            return new UserDto(user.Id, user.LastName, user.FirstName, user.City, user.PostalCode, user.Address, user.Email, user.PhoneNumber, user.UserName, roles[0], user.EmailConfirmed);
+            return new UserDto(user.Id, user.LastName, user.FirstName, user.City, user.PostalCode, user.Address, user.Email, user.PhoneNumber, user.UserName, roles[0], user.InventoryId ?? 0, user.EmailConfirmed);
         }
 
         public JwtSecurityToken Verify(string token)

@@ -10,5 +10,6 @@
                           string PhoneNumber,
                           string UserName,
                           string Role,
+                          int InventoryId,
                           bool EmailConfirmed);
 }

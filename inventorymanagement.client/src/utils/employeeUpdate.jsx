@@ -18,6 +18,7 @@ function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
         email: "",
         userName: "",
         role: "",
+        inventoryId: 0,
         emailConfirmed: false
     });
 
@@ -41,6 +42,7 @@ function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
                 email: selectedEmployee.email || "",
                 userName: selectedEmployee.userName || "",
                 role: selectedEmployee.role || "",
+                inventoryId: selectedEmployee.inventoryId || 0,
                 emailConfirmed: selectedEmployee.emailConfirmed || false
             });
         }
@@ -140,7 +142,7 @@ function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
                                         label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim()}
                                         value={formData[key]}
                                         onChange={handleInputChange}
-                                        disabled={key === 'role' || key === 'emailConfirmed'}
+                                        disabled={key === 'role' || key === 'emailConfirmed' || key === 'inventoryId'}
                                     />
                                 </Grid>
                             )
@@ -181,6 +183,7 @@ UpdateEmployeeModal.propTypes = {
         userName: PropTypes.string,
         role: PropTypes.string,
         emailConfirmed: PropTypes.bool,
+        inventoryId: PropTypes.number,
         id: PropTypes.string
     }),
     open: PropTypes.bool.isRequired,
