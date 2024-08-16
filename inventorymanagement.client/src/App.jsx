@@ -11,7 +11,6 @@ import MapIcon from '@mui/icons-material/Map';
 import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
 import WrongLocationIcon from '@mui/icons-material/WrongLocation';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import EggIcon from '@mui/icons-material/Egg';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
@@ -52,19 +51,15 @@ function App() {
     const adminItems = [
         { to: "/addwarehouse", icon: <AddLocationAltIcon />, text: "Új raktár hozzáadása" },
         { to: "/warehouses", icon: <MapIcon />, text: "Összes raktár listázása" },
-        { to: "/updatewarehouse", icon: <EditLocationAltIcon />, text: "Raktár adatok frissítése" },
-        { to: "/deletewarehouse", icon: <WrongLocationIcon />, text: "Raktár törlése" },
-        { to: "/inventory", icon: <FmdGoodIcon />, text: "Raktár adatok" },
+        { to: "/warehousedata", icon: <FmdGoodIcon />, text: "Raktár adatok" },
         { to: "/employees", icon: <GroupsIcon />, text: "Alkalmazottak" },
-        { to: "/registration", icon: <PersonAddIcon />, text: "Alkalmazott hozzáadása" },
-        { to: "/removeemployee", icon: <PersonRemoveIcon />, text: "Alkalmazott törlése" },
+        { to: "/addemployee", icon: <PersonAddIcon />, text: "Alkalmazott hozzáadása" },
     ];
 
     const managerItems = [
-        { to: "/inventory", icon: <FmdGoodIcon />, text: "Raktár adatok" },
+        { to: "/warehousedata", icon: <FmdGoodIcon />, text: "Raktár adatok" },
         { to: "/employees", icon: <GroupsIcon />, text: "Alkalmazottak" },
-        { to: "/registration", icon: <PersonAddIcon />, text: "Alkalmazott hozzáadása" },
-        { to: "/removeemployee", icon: <PersonRemoveIcon />, text: "Alkalmazott törlése" },
+        { to: "/addemployee", icon: <PersonAddIcon />, text: "Alkalmazott hozzáadása" },
     ];
 
     const roleItems = {

@@ -13,14 +13,12 @@ import NonConsumables from './pages/drawers/items/NonConsumables.jsx'
 import OrderList from './pages/drawers/items/OrderList.jsx'
 import Products from './pages/drawers/items/Products.jsx'
 import Tools from './pages/drawers/items/Tools.jsx'
-import Registration from './pages/drawers/employees/Registration.jsx'
+import AddEmployee from './pages/drawers/employees/AddEmployee.jsx'
 import Employees from './pages/drawers/employees/Employees.jsx'
-import RemoveEmployee from './pages/drawers/employees/RemoveEmployee.jsx'
-import Inventory from './pages/drawers/warehouses/Inventory.jsx'
+import WarehouseData from './pages/drawers/warehouses/WarehouseData.jsx'
 import AddWarehouse from './pages/drawers/warehouses/AddWarehouse.jsx'
 import Warehouses from './pages/drawers/warehouses/Warehouses.jsx'
 import UpdateWarehouse from './pages/drawers/warehouses/UpdateWarehouse.jsx'
-import DeleteWarehouse from './pages/drawers/warehouses/DeleteWarehouse.jsx'
 import Logout from './components/LogoutButton.jsx'
 import './index.css'
 
@@ -42,8 +40,8 @@ const router = createBrowserRouter([
                 element: <AllItems />
             },
             {
-                path: "/registration",
-                element: <Registration />
+                path: "/addemployee",
+                element: <AddEmployee />
             },
             {
                 path: "/verify/:userId",
@@ -58,8 +56,8 @@ const router = createBrowserRouter([
                 element: <Profile />
             },
             {
-                path: "/inventory",
-                element: <Inventory />
+                path: "/warehousedata",
+                element: <WarehouseData />
             },
             {
                 path: "/addwarehouse",
@@ -72,14 +70,6 @@ const router = createBrowserRouter([
             {
                 path: "/updatewarehouse",
                 element: <UpdateWarehouse />
-            },
-            {
-                path: "/deletewarehouse",
-                element: <DeleteWarehouse />
-            },
-            {
-                path: "/removeemployee",
-                element: <RemoveEmployee />
             },
             {
                 path: "/consumables",
