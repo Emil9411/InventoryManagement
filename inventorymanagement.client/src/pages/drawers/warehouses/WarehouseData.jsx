@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import LoadingCircle from '../../../components/LoadingCircle';
 import '../../../index.css';
 
-function Inventory() {
+function WarehouseData() {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -39,10 +39,8 @@ function Inventory() {
     }
 
     return (
-        <div className="inventory">
-            Inventory page
-        </div>
+        <p>Warehouse data page</p>
     );
 }
 
-export default Inventory;
+export default WarehouseData;
