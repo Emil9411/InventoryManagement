@@ -10,7 +10,7 @@ import MessageModal from '../../../components/MessageModal';
 import LoadingCircle from '../../../components/LoadingCircle';
 import "../../../index.css";
 
-function Registration() {
+function AddEmployee() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
@@ -43,7 +43,7 @@ function Registration() {
                     setModalState({
                         open: true,
                         title: "Nincs raktár létrehozva",
-                        message: "Regisztrálás előtt szükséges raktárt létrehozni",
+                        message: "Alkalmazott hozzáadása előtt szükséges raktárt létrehozni",
                         actions: [
                             {
                                 label: 'Új Raktár Létrehozása',
@@ -153,8 +153,8 @@ function Registration() {
     return (
         <>
             <Box display="flex" alignItems="center" justifyContent="center" minHeight="fit-content">
-                <Paper elevation={3} sx={{ margin: 6, padding: 6, maxWidth: 400, width: '100%' }}>
-                    <Typography variant="h3" align="center" gutterBottom>Regisztráció</Typography>
+                <Paper elevation={3} sx={{ margin: 6, padding: 6, maxWidth: 600, width: '100%' }}>
+                    <Typography variant="h3" align="center" gutterBottom>Alkalmazott hozzáadása</Typography>
                     <Grid container spacing={2} direction="column" justifyContent="center" alignItems="center">
                         <Grid item xs={12}>
                             {formSubmitted && email === "" ? (
@@ -246,7 +246,7 @@ function Registration() {
                                 loading={isSubmitting}
                                 onClick={handleSubmit}
                             >
-                                Regisztráció
+                                Hozzáadás
                             </LoadingButton>
                         </Grid>
                     </Grid>
@@ -264,4 +264,4 @@ function Registration() {
     );
 }
 
-export default Registration;
+export default AddEmployee;
