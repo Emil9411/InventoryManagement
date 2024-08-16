@@ -1,16 +1,17 @@
 ﻿import { useState, useEffect } from 'react';
 import { Button, Table, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import LoadingCircle from '../../../components/LoadingCircle';
 import '../../../index.css';
 import swal from 'sweetalert';
-import handleUpdateEmployeeData from '../../../utils/employeeUpdate.jsx';
+import UpdateEmployeeModal from '../../../utils/employeeUpdate.jsx';
 
 function Employees() {
     const [employees, setEmployees] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [modalOpen, setModalOpen] = useState(false);
+    const [modalUser, setModalUser] = useState(null);
 
     async function getEmployees() {
         try {
@@ -112,15 +113,16 @@ function Employees() {
                                     {employee.emailConfirmed ? "Aktív" : "Inaktív"}
                                 </TableCell>
                                 <TableCell>
-                                    <Button variant='outlined' color='info' onClick={() => handleUpdateEmployeeData(employee)} startIcon={<EditIcon />}>Módosítás</Button>
+                                    <Button variant='outlined' color='info' onClick={() => { setModalOpen(true); setModalUser(employee); }} startIcon={<EditIcon />}>Módosítás</Button>
                                 </TableCell>
                                 <TableCell>
-                                    <Button variant='outlined' color='error' onClick={() => handleDeleteEmployee(employee)} startIcon={<DeleteIcon />}>Törlés</Button>
+                                    <Button variant='outlined' color='error' onClick={() => handleDeleteEmployee(employee)} startIcon={<PersonRemoveIcon />}>Törlés</Button>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
-                </Table>
+            </Table>
+            {modalOpen && <UpdateEmployeeModal open={modalOpen} onClose={() => setModalOpen(false)} selectedEmployee={modalUser} />} }
             </TableContainer>
     );
 }
