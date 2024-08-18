@@ -8,8 +8,6 @@ import WarehouseIcon from '@mui/icons-material/Warehouse';
 import LoginIcon from '@mui/icons-material/Login';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import MapIcon from '@mui/icons-material/Map';
-import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
-import WrongLocationIcon from '@mui/icons-material/WrongLocation';
 import FmdGoodIcon from '@mui/icons-material/FmdGood';
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import EggIcon from '@mui/icons-material/Egg';
