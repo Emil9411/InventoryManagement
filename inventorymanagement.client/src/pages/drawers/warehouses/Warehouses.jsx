@@ -1,8 +1,9 @@
 ﻿import { useState, useEffect } from 'react';
 import { Button, Table, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Typography } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
+import EditLocationAltIcon from '@mui/icons-material/EditLocationAlt';
+import WrongLocationIcon from '@mui/icons-material/WrongLocation';
 import LoadingCircle from '../../../components/LoadingCircle';
 import MessageModal from '../../../components/MessageModal';
 import UpdateWarehouseModal from '../../../utils/warehouseUpdate.jsx';
@@ -12,28 +13,84 @@ function Warehouses() {
     const [loading, setLoading] = useState(true);
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
     const [updateModalWarehouse, setUpdateModalWarehouse] = useState(null);
-    const [messageModal, setMessageModal] = useState({ open: false, title: '', message: '' });
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', message: '', actions: [] });
 
     async function fetchWarehouses() {
         try {
-            const response = await fetch('/api/inventory/all');
+            const response = await fetch('/api/inventory/all', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
             const data = await response.json();
-            if (response.ok) {
-                setWarehouses(data);
-                setLoading(false);
-                console.log(data);
-            } else {
-                console.log(data);
-                setMessageModal({ open: true, title: 'Hiba az adatok betöltése közben', message: data.message });
-            }
+            setWarehouses(data);
+            setLoading(false);
         } catch (error) {
-            setMessageModal({ open: true, title: 'Hiba az adatok betöltése közben', message: error.message });
+            console.error(error);
         }
     }
 
     useEffect(() => {
         fetchWarehouses();
     }, []);
+
+    function handleDeleteWarehouse(selectedWarehouse) {
+        setModalContent({
+            title: 'Megerősítés',
+            message: `Biztosan törölni szeretné a(z) ${selectedWarehouse.name} raktárat?`,
+            actions: [
+                {
+                    label: 'Igen',
+                    onClick: () => confirmDeleteWarehouse(selectedWarehouse),
+                    color: 'error',
+                    startIcon: <WrongLocationIcon />
+                },
+                { label: 'Nem', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }
+            ]
+        });
+        setDeleteModalOpen(true);
+    }
+
+    async function confirmDeleteWarehouse(selectedWarehouse) {
+        setLoading(true);
+        setDeleteModalOpen(false);
+        try {
+            const response = await fetch(`/api/inventory/delete/${selectedWarehouse.inventoryId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                setWarehouses(warehouses.filter(warehouse => warehouse.inventoryId !== selectedWarehouse.inventoryId));
+                setModalContent({
+                    title: 'Siker',
+                    message: `${selectedWarehouse.name} raktár sikeresen törölve!`,
+                    actions: [{ label: 'Rendben', onClick: () => setDeleteModalOpen(false), startIcon: <DoneIcon /> }]
+                });
+            } else {
+                setModalContent({
+                    title: 'Hiba',
+                    message: 'A raktár törlése sikertelen.',
+                    actions: [{ label: 'Rendben', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }]
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            setModalContent({
+                title: 'Hiba',
+                message: 'A raktár törlése sikertelen.',
+                actions: [{ label: 'Rendben', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }]
+            });
+        } finally {
+            setLoading(false);
+            setDeleteModalOpen(true);
+        }                
+    }
 
     if (loading) {
         return <LoadingCircle />;
@@ -63,10 +120,10 @@ function Warehouses() {
                                 <TableCell>{warehouse.items ? warehouse.items.length : 0}</TableCell>
                                 <TableCell>{warehouse.employees ? warehouse.employees.length : 0}</TableCell>
                                 <TableCell>
-                                    <Button variant="contained" color="primary" startIcon={<EditIcon />} onClick={() => { setUpdateModalOpen(true); setUpdateModalWarehouse(warehouse); }}>Módosítás</Button>
+                                    <Button variant="contained" color="primary" startIcon={<EditLocationAltIcon />} onClick={() => { setUpdateModalOpen(true); setUpdateModalWarehouse(warehouse); }}>Módosítás</Button>
                                 </TableCell>
                                 <TableCell>
-                                    <Button variant="contained" color="error" startIcon={<CloseIcon />}>Törlés</Button>
+                                    <Button variant="contained" color="error" startIcon={<WrongLocationIcon />} onClick={() => handleDeleteWarehouse(warehouse)}>Törlés</Button>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -74,6 +131,16 @@ function Warehouses() {
                 </Table>
             </TableContainer>
             {updateModalOpen && <UpdateWarehouseModal open={updateModalOpen} selectedWarehouse={updateModalWarehouse} onClose={() => setUpdateModalOpen(false)} />}
+            {deleteModalOpen &&
+                <MessageModal
+                    open={deleteModalOpen}
+                    onClose={() => setDeleteModalOpen(false)}
+                    title={modalContent.title}
+                    actions={modalContent.actions}
+                >
+                    <Typography>{modalContent.message}</Typography>
+                </MessageModal>
+            }
         </div>
     );
 }
