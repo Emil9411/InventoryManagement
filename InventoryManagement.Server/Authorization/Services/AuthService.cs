@@ -162,6 +162,8 @@ namespace InventoryManagement.Server.Authorization.Services
             user.PostalCode = userDto.PostalCode;
             user.Address = userDto.Address;
             user.PhoneNumber = userDto.PhoneNumber;
+            user.UserName = userDto.UserName;
+            user.InventoryId = userDto.InventoryId;
 
             await _userManager.UpdateAsync(user);
             _logger.LogInformation($"AuthService: User with id {userDto.Id} updated successfully");
