@@ -66,19 +66,18 @@ function Employees() {
                     'Content-Type': 'application/json',
                 },
             });
-
             if (response.ok) {
                 setEmployees(employees.filter(emp => emp.id !== selectedEmployee.id));
                 setModalContent({
                     title: 'Siker',
                     message: `${selectedEmployee.lastName} ${selectedEmployee.firstName} sikeresen törölve.`,
-                    actions: [{ label: 'OK', onClick: () => setDeleteModalOpen(false), startIcon: <DoneIcon /> }]
+                    actions: [{ label: 'Rendben', onClick: () => setDeleteModalOpen(false), startIcon: <DoneIcon /> }]
                 });
             } else {
                 setModalContent({
                     title: 'Hiba',
                     message: 'Nem sikerült törölni az alkalmazottat. Próbálja újra.',
-                    actions: [{ label: 'OK', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }]
+                    actions: [{ label: 'Rendben', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }]
                 });
             }
         } catch (error) {
@@ -86,7 +85,7 @@ function Employees() {
             setModalContent({
                 title: 'Hiba',
                 message: 'Hiba történt az alkalmazott törlésekor. Próbálja újra.',
-                actions: [{ label: 'OK', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }]
+                actions: [{ label: 'Rendben', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }]
             });
         } finally {
             setDeleteModalOpen(true);
