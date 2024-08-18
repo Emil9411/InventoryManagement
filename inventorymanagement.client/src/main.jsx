@@ -18,7 +18,6 @@ import Employees from './pages/drawers/employees/Employees.jsx'
 import WarehouseData from './pages/drawers/warehouses/WarehouseData.jsx'
 import AddWarehouse from './pages/drawers/warehouses/AddWarehouse.jsx'
 import Warehouses from './pages/drawers/warehouses/Warehouses.jsx'
-import UpdateWarehouse from './pages/drawers/warehouses/UpdateWarehouse.jsx'
 import Logout from './components/LogoutButton.jsx'
 import './index.css'
 
@@ -66,10 +65,6 @@ const router = createBrowserRouter([
             {
                 path: "/warehouses",
                 element: <Warehouses />
-            },
-            {
-                path: "/updatewarehouse",
-                element: <UpdateWarehouse />
             },
             {
                 path: "/consumables",
