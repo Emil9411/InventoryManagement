@@ -1,13 +1,12 @@
 ﻿import { useState, useEffect } from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes
-import { Button, TextField, Typography, Grid, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Divider } from '@mui/material';
+import PropTypes from 'prop-types';
+import { Button, TextField, Typography, Grid, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Divider, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import ErrorIcon from '@mui/icons-material/Error';
 import MessageModal from '../components/MessageModal';
 
-function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
-    // Initialize formData with default values or values from selectedEmployee
+function UpdateEmployeeModal({ selectedEmployee, warehouses, open, onClose }) {
     const [formData, setFormData] = useState({
         lastName: "",
         firstName: "",
@@ -29,7 +28,6 @@ function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
         actions: []
     });
 
-    // Update formData when selectedEmployee changes
     useEffect(() => {
         if (selectedEmployee) {
             setFormData({
@@ -53,8 +51,12 @@ function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
         setFormData(prevState => ({ ...prevState, [id]: value }));
     };
 
+    const handleSelectChange = (event) => {
+        const value = event.target.value;
+        setFormData(prevState => ({ ...prevState, inventoryId: value }));
+    };
+
     const handleSubmit = async () => {
-        // Validate form fields
         const hasEmptyField = Object.values(formData).some(value => value === "");
         if (hasEmptyField) {
             setModalState({
@@ -118,7 +120,7 @@ function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
     };
 
     if (!selectedEmployee) {
-        return null; // Optionally, show a loading indicator or a message if no employee is selected
+        return null;
     }
 
     return (
@@ -134,7 +136,7 @@ function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
                 <DialogContent>
                     <Grid container spacing={2}>
                         {Object.keys(formData).map((key) => (
-                            key !== 'id' && (
+                            key !== 'id' && key !== 'inventoryId' ? (
                                 <Grid item xs={10} key={key}>
                                     <TextField
                                         fullWidth
@@ -142,10 +144,28 @@ function UpdateEmployeeModal({ selectedEmployee, open, onClose }) {
                                         label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim()}
                                         value={formData[key]}
                                         onChange={handleInputChange}
-                                        disabled={key === 'role' || key === 'emailConfirmed' || key === 'inventoryId'}
+                                        disabled={key === 'role' || key === 'emailConfirmed'}
                                     />
                                 </Grid>
-                            )
+                            ) : key === 'inventoryId' ? (
+                                <Grid item xs={10} key={key}>
+                                    <FormControl fullWidth>
+                                        <InputLabel id="inventoryId-label">Raktár</InputLabel>
+                                        <Select
+                                            labelId="inventoryId-label"
+                                            id={key}
+                                            value={formData[key]}
+                                            onChange={handleSelectChange}
+                                            label="Raktár"
+                                        >
+                                            <MenuItem value={0} disabled>Nincs raktár</MenuItem>
+                                            {warehouses.map(warehouse => (
+                                                <MenuItem key={warehouse.inventoryId} value={warehouse.inventoryId}>{warehouse.name}</MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            ) : null
                         ))}
                     </Grid>
                 </DialogContent>
@@ -187,7 +207,8 @@ UpdateEmployeeModal.propTypes = {
         id: PropTypes.string
     }),
     open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    warehouses: PropTypes.array.isRequired
 };
 
 export default UpdateEmployeeModal;

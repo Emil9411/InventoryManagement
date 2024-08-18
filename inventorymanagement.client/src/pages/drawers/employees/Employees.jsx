@@ -11,6 +11,7 @@ import '../../../index.css';
 
 function Employees() {
     const [employees, setEmployees] = useState([]);
+    const [warehouses, setWarehouses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [updateModalOpen, setUpdateModalOpen] = useState(false);
     const [updateModalUser, setUpdateModalUser] = useState(null);
@@ -28,7 +29,22 @@ function Employees() {
             });
             const data = await response.json();
             setEmployees(data);
-            setLoading(false);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function getWarehouses() {
+        try {
+            const response = await fetch('/api/inventory/all', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            setWarehouses(data);
         } catch (error) {
             console.error(error);
         }
@@ -36,6 +52,8 @@ function Employees() {
 
     useEffect(() => {
         getEmployees();
+        getWarehouses();
+        setLoading(false);
     }, []);
 
     function handleDeleteEmployee(selectedEmployee) {
@@ -109,6 +127,7 @@ function Employees() {
                         <TableCell sx={{ fontWeight: 'bold' }}>Telefonszám</TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}>Felhasználónév</TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}>Szerepkör</TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}>Raktár</TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}>Státusz</TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}>Adatok módosítása</TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}>Felhasználó törlése</TableCell>
@@ -124,6 +143,7 @@ function Employees() {
                             <TableCell>{employee.phoneNumber}</TableCell>
                             <TableCell>{employee.userName}</TableCell>
                             <TableCell>{employee.role}</TableCell>
+                            <TableCell>{employee.inventoryId ? warehouses.find(warehouse => warehouse.inventoryId === employee.inventoryId).name : "Nincs raktár"}</TableCell>
                             <TableCell sx={{ color: employee.emailConfirmed ? "green" : "red" }}>
                                 {employee.emailConfirmed ? "Aktív" : "Inaktív"}
                             </TableCell>
@@ -137,7 +157,7 @@ function Employees() {
                     ))}
                 </TableBody>
             </Table>
-            {updateModalOpen && <UpdateEmployeeModal open={updateModalOpen} onClose={() => setUpdateModalOpen(false)} selectedEmployee={updateModalUser} />}
+            {updateModalOpen && <UpdateEmployeeModal open={updateModalOpen} onClose={() => setUpdateModalOpen(false)} selectedEmployee={updateModalUser} warehouses={warehouses} />}
             {deleteModalOpen && (
                 <MessageModal
                     open={deleteModalOpen}
