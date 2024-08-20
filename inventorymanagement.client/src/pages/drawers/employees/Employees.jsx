@@ -51,9 +51,14 @@ function Employees() {
     }
 
     useEffect(() => {
-        getEmployees();
-        getWarehouses();
-        setLoading(false);
+        async function fetchData() {
+            // Trigger both functions in parallel
+            await Promise.all([getEmployees(), getWarehouses()]);
+            // Set loading to false after both functions have completed
+            setLoading(false);
+        }
+
+        fetchData();
     }, []);
 
     function handleDeleteEmployee(selectedEmployee) {
