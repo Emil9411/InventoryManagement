@@ -2,10 +2,11 @@
 import { Button, Box, Paper, Grid, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import '../index.css';
-import handleUpdateEmployeeData from '../utils/employeeUpdate.jsx';
+import UpdateEmployeeModal from '../utils/employeeUpdate.jsx';
 
 function Profile() {
     const [user, setUser] = useState(null);
+    const [open, setOpen] = useState(false);
 
     async function getUser() {
         const response = await fetch("api/auth/check", {
@@ -58,12 +59,17 @@ function Profile() {
                         </Grid>
                     ))}
                     <Grid item xs={12} display="flex" justifyContent="center">
-                        <Button variant="outlined" onClick={() => handleUpdateEmployeeData(user)} startIcon={<EditIcon />}>
+                        <Button variant="outlined" onClick={() => setOpen(true)} startIcon={<EditIcon />} sx={{ marginTop: 2 }}>
                             Adatok módosítása
                         </Button>
                     </Grid>
                 </Grid>
             </Paper>
+            <UpdateEmployeeModal 
+                open={open}
+                onClose={() => setOpen(false)}
+                selectedEmployee={user}
+                warehouses={[]} />
         </Box>
     );
 }
