@@ -3,10 +3,12 @@ import { Button, Box, Paper, Grid, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import '../index.css';
 import UpdateEmployeeModal from '../utils/employeeUpdate.jsx';
+import LoadingCircle from '../components/LoadingCircle';
 
 function Profile() {
     const [user, setUser] = useState(null);
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     async function getUser() {
         const response = await fetch("api/auth/check", {
@@ -26,11 +28,18 @@ function Profile() {
         });
         const userData = await userDataResponse.json();
         setUser(userData);
+        setLoading(false);
     }
 
     useEffect(() => {
         getUser();
     }, []);
+
+    if (loading) {
+        return (
+            <LoadingCircle />
+        );
+    }
 
     return (
         <Box display="flex" alignItems="center" justifyContent="center" minHeight="fit-content">
