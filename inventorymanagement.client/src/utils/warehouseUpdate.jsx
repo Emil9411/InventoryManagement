@@ -6,7 +6,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import ErrorIcon from '@mui/icons-material/Error';
 import MessageModal from '../components/MessageModal';
 
-function UpdateWarehouseModal({ selectedWarehouse, open, onClose }) {
+function UpdateWarehouseModal({ selectedWarehouse, open, onClose, canChangeManager }) {
     const [formData, setFormData] = useState({
         inventoryId: 0,
         name: "",
@@ -141,7 +141,7 @@ function UpdateWarehouseModal({ selectedWarehouse, open, onClose }) {
                                     label={key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1').trim()}
                                     value={key === 'employees' || key === 'items' ? formData[key].length : formData[key]}
                                     onChange={handleInputChange}
-                                    disabled={key === 'inventoryId' || key === 'employees' || key === 'items'}
+                                    disabled={key === 'inventoryId' || key === 'employees' || key === 'items' || (key === 'managerId' && !canChangeManager)}
                                 />
                             </Grid>
                         ))}
@@ -184,7 +184,8 @@ UpdateWarehouseModal.propTypes = {
         items: PropTypes.array
     }),
     open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    canChangeManager: PropTypes.bool.isRequired
 };
 
 export default UpdateWarehouseModal;
