@@ -147,7 +147,7 @@ function UpdateEmployeeModal({ selectedEmployee, warehouses, open, onClose }) {
                                         disabled={key === 'role' || key === 'emailConfirmed'}
                                     />
                                 </Grid>
-                            ) : key === 'inventoryId' ? (
+                            ) : key === 'inventoryId' && warehouses.length > 0 ? (
                                 <Grid item xs={10} key={key}>
                                     <FormControl fullWidth>
                                         <InputLabel id="inventoryId-label">Raktár</InputLabel>
