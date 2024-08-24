@@ -16,6 +16,7 @@ import RestaurantIcon from '@mui/icons-material/Restaurant';
 import OutdoorGrillIcon from '@mui/icons-material/OutdoorGrill';
 import BlenderIcon from '@mui/icons-material/Blender';
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import './index.css';
 import { themes } from './utils/themes';
 import ThemeSelect from './components/ThemeSelect';
@@ -52,12 +53,14 @@ function App() {
         { to: "/warehousedata", icon: <FmdGoodIcon />, text: "Raktár adatok" },
         { to: "/employees", icon: <GroupsIcon />, text: "Alkalmazottak" },
         { to: "/addemployee", icon: <PersonAddIcon />, text: "Alkalmazott hozzáadása" },
+        { to: "/additem", icon: <AddCircleOutlineIcon />, text: "Új tétel hozzáadása" },
     ];
 
     const managerItems = [
         { to: "/warehousedata", icon: <FmdGoodIcon />, text: "Raktár adatok" },
         { to: "/employees", icon: <GroupsIcon />, text: "Alkalmazottak" },
         { to: "/addemployee", icon: <PersonAddIcon />, text: "Alkalmazott hozzáadása" },
+        { to: "/additem", icon: <AddCircleOutlineIcon />, text: "Új tétel hozzáadása" },
     ];
 
     const roleItems = {

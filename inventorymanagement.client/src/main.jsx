@@ -5,6 +5,7 @@ import App from './App.jsx'
 import Login from './pages/Login.jsx'
 import Verification from './pages/Verification.jsx'
 import Profile from './pages/Profile.jsx'
+import AddItem from './pages/drawers/items/AddItem.jsx'
 import AllItems from './pages/drawers/items/AllItems.jsx'
 import Consumables from './pages/drawers/items/Consumables.jsx'
 import Equipments from './pages/drawers/items/Equipments.jsx'
@@ -93,6 +94,10 @@ const router = createBrowserRouter([
             {
                 path: "/tools",
                 element: <Tools />
+            },
+            {
+                path: "/additem",
+                element: <AddItem />
             }
         ]
     },
