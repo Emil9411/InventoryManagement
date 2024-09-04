@@ -1,7 +1,12 @@
-﻿namespace InventoryManagement.Server.Model
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace InventoryManagement.Server.Model
 {
     public class Item
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string Name { get; set; }
         public int? WeightInGrams { get; set; }

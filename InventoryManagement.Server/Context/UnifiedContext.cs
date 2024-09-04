@@ -26,6 +26,9 @@ namespace InventoryManagement.Server.Context
             modelBuilder.Entity<Item>()
                 .HasIndex(i => new { i.Name, i.InventoryId })
                 .IsUnique();
+            modelBuilder.Entity<Item>()
+                .Property(i => i.Id)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Inventory>()
                 .HasMany(i => i.Employees)
@@ -38,6 +41,9 @@ namespace InventoryManagement.Server.Context
             modelBuilder.Entity<Inventory>()
                 .HasIndex(i => i.Name)
                 .IsUnique();
+            modelBuilder.Entity<Inventory>()
+                .Property(i => i.InventoryId)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<AppUser>()
                 .HasOne(u => u.Inventory)
