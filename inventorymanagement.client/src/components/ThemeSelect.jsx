@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+﻿import { MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 
 const ThemeSelect = ({ currentTheme, setTheme }) => {
     const handleChange = (event) => {
