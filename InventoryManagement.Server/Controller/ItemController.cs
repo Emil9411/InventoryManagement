@@ -1,4 +1,5 @@
-﻿using InventoryManagement.Server.Model;
+﻿using AutoMapper;
+using InventoryManagement.Server.Model;
 using InventoryManagement.Server.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,13 @@ namespace InventoryManagement.Server.Controller
     {
         private readonly IItemRepo _itemRepo;
         private readonly ILogger<ItemController> _logger;
+        private readonly IMapper _mapper;
 
-        public ItemController(IItemRepo itemRepo, ILogger<ItemController> logger)
+        public ItemController(IItemRepo itemRepo, ILogger<ItemController> logger, IMapper mapper)
         {
             _itemRepo = itemRepo;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpGet("get/{id}"), Authorize(Roles = "Admin, Manager, User")]
@@ -49,13 +52,15 @@ namespace InventoryManagement.Server.Controller
         }
 
         [HttpPost("create"), Authorize(Roles = "Admin, Manager")]
-        public async Task<IActionResult> CreateItem([FromBody] Item item)
+        public async Task<IActionResult> CreateItem([FromBody] ItemDto itemDto)
         {
             if (!ModelState.IsValid)
             {
                 _logger.LogError("ItemController: Invalid item creation request");
                 return BadRequest("Invalid item creation request");
             }
+
+            var item = _mapper.Map<Item>(itemDto);
 
             await _itemRepo.CreateItemAsync(item);
             _logger.LogInformation($"ItemController: Item with name {item.Name} created successfully");

@@ -74,14 +74,33 @@ namespace InventoryManagement.Server.Repository
             if (item == null)
             {
                 _logger.LogWarning("Item is null");
-                throw new ArgumentNullException("Item is null");
+                throw new ArgumentNullException(nameof(item), "Item is null");
             }
+
+            if (item.InventoryId > 0)
+            {
+                var inventory = await _context.Inventories.FirstOrDefaultAsync(i => i.InventoryId == item.InventoryId);
+
+                if (inventory == null)
+                {
+                    _logger.LogWarning($"Inventory with id {item.InventoryId} not found");
+                    throw new ArgumentException($"Inventory with id {item.InventoryId} not found");
+                }
+                else
+                {
+                    item.Inventory = inventory;
+                }
+            }
+
+            // Ensure the Id is set to the default value (e.g., 0 for int) before adding to context
+            item.Id = 0;
 
             await _context.Items.AddAsync(item);
             await _context.SaveChangesAsync();
 
             _logger.LogInformation($"Item with id {item.Id} created");
         }
+
 
         public async Task UpdateItemAsync(Item item)
         {
