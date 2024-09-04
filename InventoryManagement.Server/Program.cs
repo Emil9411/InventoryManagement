@@ -2,6 +2,7 @@ using InventoryManagement.Server.Authorization.Models;
 using InventoryManagement.Server.Authorization.Seeder;
 using InventoryManagement.Server.Authorization.Services;
 using InventoryManagement.Server.Context;
+using InventoryManagement.Server.Mapping;
 using InventoryManagement.Server.Model;
 using InventoryManagement.Server.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -54,9 +55,14 @@ app.Run();
 
 void AddServices()
 {
-    builder.Services.AddControllers();
+    builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+        });
     builder.Services.AddLogging();
     builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddAutoMapper(typeof(MappingProfile));
     builder.Services.AddScoped<ITokenService, TokenService>();
     builder.Services.AddScoped<IAuthService, AuthService>();
     builder.Services.AddScoped<IEmailSender, EmailSender>();
