@@ -15,8 +15,11 @@ function AddItem() {
     const [itemData, setItemData] = useState({
         name: '',
         isIngredient: false,
+        isNonIngredient: false,
         isConsumable: false,
+        isNonConsumable: false,
         isEquipment: false,
+        isNonEquipment: false,
         weightInGrams: 0,
         weightInKilograms: 0,
         quantityInPieces: 0,
@@ -171,8 +174,11 @@ function AddItem() {
                                 setItemData({
                                     name: '',
                                     isIngredient: false,
+                                    isNonIngredient: false,
                                     isConsumable: false,
+                                    isNonConsumable: false,
                                     isEquipment: false,
+                                    isNonEquipment: false,
                                     weightInGrams: 0,
                                     weightInKilograms: 0,
                                     quantityInPieces: 0,
@@ -190,6 +196,8 @@ function AddItem() {
                                     inventoryId: 0,
                                     inventory: {}
                                 });
+                                setItemType("");
+                                window.location.reload();
                             },
                             color: 'success',
                             startIcon: <DoneIcon />
@@ -234,13 +242,22 @@ function AddItem() {
         }
     }
 
-    function calculateGrossPrice(netPrice, taxRate) {
+    function calculateGrossPrice(netPrice, taxRate, isGram) {
         let grossPrice = netPrice * (1 + taxRate / 100);
-        return Math.ceil(grossPrice * 100) / 100;
+        let grossPricePerGram = grossPrice / 1000;
+        return isGram ? grossPricePerGram.toFixed(2) : grossPrice.toFixed(2);
     }
 
     function calculateUnitPrice(netPrice, piecePerPackage) {
         return netPrice * piecePerPackage;
+    }
+
+    function calculatePricePerGram(pricePerKilogram) {
+        return pricePerKilogram / 1000;
+    }
+
+    function calculateKilogramToGram(kilogram) {
+        return kilogram * 1000;
     }
 
     useEffect(() => {
@@ -249,16 +266,24 @@ function AddItem() {
 
     useEffect(() => {
         const netPricePerPackage = itemData.netPricePerPiece * itemData.quantityPerPackage;
-        const grossPricePerPiece = calculateGrossPrice(itemData.netPricePerPiece, itemData.taxRate);
-        const grossPricePerPackage = calculateGrossPrice(netPricePerPackage, itemData.taxRate);
+        const grossPricePerPiece = calculateGrossPrice(itemData.netPricePerPiece, itemData.taxRate, false);
+        const grossPricePerPackage = calculateGrossPrice(netPricePerPackage, itemData.taxRate, false);
+        const netPricePerKilogram = itemData.netPricePerKilogram;
+        const netPricePerGram = calculatePricePerGram(itemData.netPricePerKilogram);
+        const grossPricePerKilogram = calculateGrossPrice(itemData.netPricePerKilogram, itemData.taxRate, false);
+        const grossPricePerGram = calculateGrossPrice(netPricePerKilogram, itemData.taxRate, true);
 
         setItemData(prev => ({
             ...prev,
             netPricePerPackage,
             grossPricePerPiece,
-            grossPricePerPackage
+            grossPricePerPackage,
+            netPricePerKilogram,
+            netPricePerGram,
+            grossPricePerKilogram,
+            grossPricePerGram
         }));
-    }, [itemData.netPricePerPiece, itemData.quantityPerPackage, itemData.taxRate]);
+    }, [itemData.netPricePerPiece, itemData.quantityPerPackage, itemData.taxRate, itemData.netPricePerKilogram]);
 
     if (loading) {
         return (
@@ -289,8 +314,11 @@ function AddItem() {
                                 setItemData({
                                     ...itemData,
                                     isIngredient: e.target.value === 'Hozzávaló',
+                                    isNonIngredient: e.target.value === 'Termék',
                                     isConsumable: e.target.value === 'Fogyócikk',
-                                    isEquipment: e.target.value === 'Felszerelés'
+                                    isNonConsumable: e.target.value === 'Tartós cikk',
+                                    isEquipment: e.target.value === 'Felszerelés',
+                                    isNonEquipment: e.target.value === 'Eszköz'
                                 });
                                 setItemType(e.target.value)
                             }}
@@ -309,16 +337,8 @@ function AddItem() {
                             onChange={(e) => setItemData({ ...itemData, taxRate: parseFloat(e.target.value) })}
                         />
                     </Grid>
-                    {itemData.isIngredient && (
+                    {itemType === '' ? null : itemType === 'Hozzávaló' ? (
                         <>
-                            <Grid item xs={12}>
-                                <Typography variant="h6" align="center" gutterBottom>Mennyiség (gramm):</Typography>
-                                <TextField
-                                    fullWidth
-                                    variant="outlined"
-                                    onChange={(e) => setItemData({ ...itemData, weightInGrams: parseFloat(e.target.value) })}
-                                />
-                            </Grid>
                             <Grid item xs={12}>
                                 <Typography variant="h6" align="center" gutterBottom>Mennyiség (kilogramm):</Typography>
                                 <TextField
@@ -328,11 +348,12 @@ function AddItem() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography variant="h6" align="center" gutterBottom>Nettó ár/gramm:</Typography>
+                                <Typography variant="h6" align="center" gutterBottom>Mennyiség (gramm):</Typography>
                                 <TextField
                                     fullWidth
                                     variant="outlined"
-                                    onChange={(e) => setItemData({ ...itemData, netPricePerGram: parseFloat(e.target.value) })}
+                                    disabled
+                                    value={calculateKilogramToGram(itemData.weightInKilograms)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -344,12 +365,12 @@ function AddItem() {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography variant="h6" align="center" gutterBottom>Bruttó ár/gramm:</Typography>
+                                <Typography variant="h6" align="center" gutterBottom>Nettó ár/gramm:</Typography>
                                 <TextField
                                     fullWidth
                                     variant="outlined"
                                     disabled
-                                    value={calculateGrossPrice(itemData.netPricePerGram, itemData.taxRate)}
+                                    value={calculatePricePerGram(itemData.netPricePerKilogram)}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -358,62 +379,74 @@ function AddItem() {
                                     fullWidth
                                     variant="outlined"
                                     disabled
-                                    value={calculateGrossPrice(itemData.netPricePerKilogram, itemData.taxRate)}
+                                    value={calculateGrossPrice(itemData.netPricePerKilogram, itemData.taxRate, false)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="h6" align="center" gutterBottom>Bruttó ár/gramm:</Typography>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    disabled
+                                    value={calculateGrossPrice(itemData.netPricePerKilogram, itemData.taxRate, true)}
+                                />
+                            </Grid>
+                        </>
+                    ) : (
+                        <>
+                            <Grid item xs={12}>
+                                <Typography variant="h6" align="center" gutterBottom>Mennyiség (darab):</Typography>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    onChange={(e) => setItemData({ ...itemData, quantityInPieces: parseFloat(e.target.value) })}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="h6" align="center" gutterBottom>Mennyiség/csomag:</Typography>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    onChange={(e) => setItemData({ ...itemData, quantityPerPackage: parseFloat(e.target.value) })}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="h6" align="center" gutterBottom>Nettó ár/darab:</Typography>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    onChange={(e) => setItemData({ ...itemData, netPricePerPiece: parseFloat(e.target.value) })}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="h6" align="center" gutterBottom>Nettó ár/csomag:</Typography>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    disabled
+                                    value={calculateUnitPrice(itemData.netPricePerPiece, itemData.quantityPerPackage)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="h6" align="center" gutterBottom>Bruttó ár/darab:</Typography>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    disabled
+                                    value={calculateGrossPrice(itemData.netPricePerPiece, itemData.taxRate, false)}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Typography variant="h6" align="center" gutterBottom>Bruttó ár/csomag:</Typography>
+                                <TextField
+                                    fullWidth
+                                    variant="outlined"
+                                    disabled
+                                    value={calculateGrossPrice(itemData.netPricePerPackage, itemData.taxRate, false)}
                                 />
                             </Grid>
                         </>
                     )}
-                    <Grid item xs={12}>
-                        <Typography variant="h6" align="center" gutterBottom>Mennyiség (darab):</Typography>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            onChange={(e) => setItemData({ ...itemData, quantityInPieces: parseFloat(e.target.value) })}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="h6" align="center" gutterBottom>Mennyiség/csomag:</Typography>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            onChange={(e) => setItemData({ ...itemData, quantityPerPackage: parseFloat(e.target.value) })}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="h6" align="center" gutterBottom>Nettó ár/darab:</Typography>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            onChange={(e) => setItemData({ ...itemData, netPricePerPiece: parseFloat(e.target.value) })}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="h6" align="center" gutterBottom>Nettó ár/csomag:</Typography>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            disabled
-                            value={calculateUnitPrice(itemData.netPricePerPiece, itemData.quantityPerPackage)}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="h6" align="center" gutterBottom>Bruttó ár/darab:</Typography>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            disabled
-                            value={calculateGrossPrice(itemData.netPricePerPiece, itemData.taxRate)}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="h6" align="center" gutterBottom>Bruttó ár/csomag:</Typography>
-                        <TextField
-                            fullWidth
-                            variant="outlined"
-                            disabled
-                            value={calculateGrossPrice(itemData.netPricePerPackage, itemData.taxRate)}
-                        />
-                    </Grid>
                     <Grid item xs={12}>
                         <Typography variant="h6" align="center" gutterBottom>Raktár:</Typography>
                         <Select
