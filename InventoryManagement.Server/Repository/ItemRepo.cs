@@ -227,7 +227,7 @@ namespace InventoryManagement.Server.Repository
             if (inventoryId.HasValue)
             {
                 var items = await _context.Items
-                    .Where(i => i.InventoryId == inventoryId && !i.IsIngredient)
+                    .Where(i => i.InventoryId == inventoryId && i.IsNonIngredient)
                     .ToListAsync();
 
                 _logger.LogInformation($"All non-ingredients found in inventory {inventoryId}");
@@ -311,7 +311,7 @@ namespace InventoryManagement.Server.Repository
             if (inventoryId.HasValue)
             {
                 var items = await _context.Items
-                    .Where(i => i.InventoryId == inventoryId && !i.IsConsumable)
+                    .Where(i => i.InventoryId == inventoryId && i.IsNonConsumable)
                     .ToListAsync();
 
                 _logger.LogInformation($"All non-consumable items found in inventory {inventoryId}");
@@ -367,7 +367,7 @@ namespace InventoryManagement.Server.Repository
             if (inventoryId.HasValue)
             {
                 var items = await _context.Items
-                    .Where(i => i.InventoryId == inventoryId && !i.IsEquipment)
+                    .Where(i => i.InventoryId == inventoryId && i.IsNonEquipment)
                     .ToListAsync();
 
                 _logger.LogInformation($"All non-equipment items found in inventory {inventoryId}");

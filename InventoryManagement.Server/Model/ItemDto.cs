@@ -19,8 +19,11 @@
         public double? GrossPricePerPackage { get; set; }
         public bool ShouldOrder { get; set; }
         public bool IsIngredient { get; set; }
+        public bool IsNonIngredient { get; set; }
         public bool IsConsumable { get; set; }
+        public bool IsNonConsumable { get; set; }
         public bool IsEquipment { get; set; }
+        public bool IsNonEquipment { get; set; }
         public int InventoryId { get; set; }
     }
 }
