@@ -37,8 +37,8 @@ function AddEmployee() {
             if (response.ok) {
                 const data = await response.json();
                 console.log(data);
-                if (data.length > 0) {
-                    setInventories(data);
+                if (data.$values.length > 0) {
+                    setInventories(data.$values);
                 } else {
                     setModalState({
                         open: true,

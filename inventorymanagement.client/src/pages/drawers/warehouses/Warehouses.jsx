@@ -26,7 +26,7 @@ function Warehouses() {
                 },
             });
             const data = await response.json();
-            setWarehouses(data);
+            setWarehouses(data.$values);
             setLoading(false);
         } catch (error) {
             console.error(error);

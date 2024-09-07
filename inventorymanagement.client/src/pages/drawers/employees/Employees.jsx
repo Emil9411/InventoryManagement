@@ -28,7 +28,7 @@ function Employees() {
                 },
             });
             const data = await response.json();
-            setEmployees(data);
+            setEmployees(data.$values);
         } catch (error) {
             console.error(error);
         }
@@ -44,7 +44,7 @@ function Employees() {
                 },
             });
             const data = await response.json();
-            setWarehouses(data);
+            setWarehouses(data.$values);
         } catch (error) {
             console.error(error);
         }
