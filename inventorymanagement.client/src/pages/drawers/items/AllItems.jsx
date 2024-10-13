@@ -3,13 +3,17 @@ import { Button, Table, Paper, TableRow, TableHead, TableContainer, TableCell, T
 import { LoadingButton } from '@mui/lab';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
 import LoadingCircle from '../../../components/LoadingCircle';
+import MessageModal from '../../../components/MessageModal';
 import "../../../index.css";
 
 function AllItems() {
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState({ title: '', message: '', actions: [] });
 
     async function getItems() {
         try {
@@ -61,6 +65,62 @@ function AllItems() {
         }
     }
 
+    function deleteItem(itemId) {
+        // ask for confirmation before deleting
+        setModalContent({
+            title: 'Megerősítés',
+            message: 'Biztosan törölni szeretné ezt az elemet?',
+            actions: [
+                {
+                    label: 'Igen',
+                    onClick: () => confirmDeleteItem(itemId),
+                    color: 'error',
+                    startIcon: <DeleteForeverIcon />
+                },
+                { label: 'Nem', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }
+            ]
+        });
+        setDeleteModalOpen(true);
+    }
+
+    async function confirmDeleteItem(itemId) {
+        setLoading(true);
+        setDeleteModalOpen(false);
+        try {
+            const response = await fetch(`/api/item/delete/${itemId}`, {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (response.ok) {
+                setItems(items.filter(item => item.id !== itemId));
+                setModalContent({
+                    title: 'Siker',
+                    message: 'Elem sikeresen törölve!',
+                    actions: [{ label: 'Rendben', onClick: () => setDeleteModalOpen(false), startIcon: <DoneIcon /> }]
+                });
+            } else {
+                setModalContent({
+                    title: 'Hiba',
+                    message: 'Hiba történt az elem törlése közben.',
+                    actions: [{ label: 'Rendben', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }]
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            setModalContent({
+                title: 'Hiba',
+                message: 'Hiba történt az elem törlése közben: ' + error,
+                actions: [{ label: 'Rendben', onClick: () => setDeleteModalOpen(false), startIcon: <CloseIcon /> }]
+            });
+        } finally {
+            setDeleteModalOpen(true);
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         getItems();
     }, []);
@@ -97,12 +157,22 @@ function AllItems() {
                             <TableCell>{item.grossPricePerKilogram}</TableCell>
                             <TableCell>
                                 <Button variant="contained" color="primary" sx={{ marginRight: 1 }} startIcon={<EditIcon />}>Szerkesztés</Button>
-                                <Button variant="contained" color="error" startIcon={<DeleteForeverIcon />}>Törlés</Button>
+                                <Button variant="contained" color="error" startIcon={<DeleteForeverIcon />} onClick={() => deleteItem(item.id)}>Törlés</Button>
                             </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
+            {deleteModalOpen && (
+                <MessageModal
+                    open={deleteModalOpen}
+                    onClose={() => setDeleteModalOpen(false)}
+                    title={modalContent.title}
+                    actions={modalContent.actions}
+                >
+                    <Typography>{modalContent.message}</Typography>
+                </MessageModal>
+            )}
         </TableContainer>
     );
 }
