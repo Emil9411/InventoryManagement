@@ -6,7 +6,7 @@ namespace InventoryManagement.Server.Authorization.Services
 {
     public interface IAuthService
     {
-        Task<AuthResult> RegisterAsync(string email, string username, string password, string role);
+        Task<AuthResult> RegisterAsync(string email, string username, string password, string role, int inventoryId);
         Task<AuthResult> LoginAsync(string email, string password);
         Task<AuthResult> ChangePasswordAsync(string email, string currentPassword, string newPassword);
         Task<AuthResult> DeleteUser(string email);

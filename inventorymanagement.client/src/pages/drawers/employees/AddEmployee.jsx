@@ -15,6 +15,7 @@ function AddEmployee() {
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
     const [role, setRole] = useState("");
+    const [inventoryId, setInventoryId] = useState(0);
     const [inventories, setInventories] = useState([]);
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -39,6 +40,7 @@ function AddEmployee() {
                 console.log(data);
                 if (data.$values.length > 0) {
                     setInventories(data.$values);
+                    console.log("Inventories fetched successfully");
                 } else {
                     setModalState({
                         open: true,
@@ -75,7 +77,7 @@ function AddEmployee() {
         event.preventDefault();
         setFormSubmitted(true);
         setIsSubmitting(true);
-        if (!email || !password || !username || !role) {
+        if (!email || !password || !username || !role || !inventoryId) {
             setIsSubmitting(false);
             return;
         }
@@ -90,7 +92,8 @@ function AddEmployee() {
                     email,
                     username,
                     password,
-                    role
+                    role,
+                    inventoryId
                 }),
             });
 
@@ -104,7 +107,7 @@ function AddEmployee() {
                             label: 'OK',
                             onClick: () => {
                                 setModalState({ ...modalState, open: false });
-                                navigate("/");
+                                navigate("/employees");
                             },
                             color: 'success',
                             startIcon: <HowToRegIcon />
@@ -206,9 +209,8 @@ function AddEmployee() {
                             )}
                             <Select
                                 fullWidth
-                                value={role}
+                                value={role || ""}
                                 onChange={(e) => setRole(e.target.value)}
-                                displayEmpty
                                 variant="outlined"
                             >
                                 <MenuItem disabled value="">
@@ -224,16 +226,15 @@ function AddEmployee() {
                                 <Typography>Melyik raktár:</Typography>
                                 <Select
                                     fullWidth
-                                    value={role}
-                                    onChange={(e) => setRole(e.target.value)}
-                                    displayEmpty
+                                    value={inventoryId || ''}
+                                    onChange={(e) => setInventoryId(e.target.value)}
                                     variant="outlined"
                                 >
                                     <MenuItem disabled value="">
                                         <em>Válassz...</em>
                                     </MenuItem>
                                     {inventories.map((inventory) => (
-                                        <MenuItem key={inventory.id} value={inventory.id}>{inventory.name}</MenuItem>
+                                        <MenuItem key={inventory.inventoryId} value={inventory.inventoryId}>{inventory.name}</MenuItem>
                                     ))}
                                 </Select>
                             </Grid>

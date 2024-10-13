@@ -1,25 +1,28 @@
 ﻿import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Button, TextField, Typography, Grid, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Divider, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import {
+    Button, TextField, Typography, Grid, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Divider, MenuItem, Select, FormControl, InputLabel
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import ErrorIcon from '@mui/icons-material/Error';
 import MessageModal from '../components/MessageModal';
 
-function UpdateEmployeeModal({ selectedEmployee, warehouses, open, onClose }) {
+function UpdateEmployeeModal({ selectedEmployee, warehouses = [], open, onClose }) {
     const [formData, setFormData] = useState({
-        lastName: "",
-        firstName: "",
-        city: "",
-        postalCode: "",
-        address: "",
-        phoneNumber: "",
-        email: "",
-        userName: "",
-        role: "",
-        inventoryId: 0,
-        emailConfirmed: false
+        lastName: selectedEmployee.lastName || "",
+        firstName: selectedEmployee.firstName || "",
+        city: selectedEmployee.city || "",
+        postalCode: selectedEmployee.postalCode || "",
+        address: selectedEmployee.address || "",
+        phoneNumber: selectedEmployee.phoneNumber || "",
+        email: selectedEmployee.email || "",
+        userName: selectedEmployee.userName || "",
+        role: selectedEmployee.role || "",
+        inventoryId: selectedEmployee.inventoryId || 0,
+        emailConfirmed: selectedEmployee.emailConfirmed || false
     });
+    const [inventory, setInventory] = useState({});
 
     const [modalState, setModalState] = useState({
         open: false,
@@ -28,34 +31,64 @@ function UpdateEmployeeModal({ selectedEmployee, warehouses, open, onClose }) {
         actions: []
     });
 
-    useEffect(() => {
-        if (selectedEmployee) {
-            setFormData({
-                lastName: selectedEmployee.lastName || "",
-                firstName: selectedEmployee.firstName || "",
-                city: selectedEmployee.city || "",
-                postalCode: selectedEmployee.postalCode || "",
-                address: selectedEmployee.address || "",
-                phoneNumber: selectedEmployee.phoneNumber || "",
-                email: selectedEmployee.email || "",
-                userName: selectedEmployee.userName || "",
-                role: selectedEmployee.role || "",
-                inventoryId: selectedEmployee.inventoryId || 0,
-                emailConfirmed: selectedEmployee.emailConfirmed || false
+    // Fetch if inventory exists
+    async function isInventoryExists(inventoryId) {
+        try {
+            const response = await fetch(`/api/inventory/exists/${inventoryId}`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
+            const exists = await response.json();
+            return exists;
+        } catch (error) {
+            console.error(error);
         }
-    }, [selectedEmployee]);
+    }
 
+    // Fetch inventory details by ID
+    async function getInventory(inventoryId) {
+        try {
+            const response = await fetch(`/api/inventory/${inventoryId}`, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            setInventory(data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    // Set form data when selectedEmployee changes
+    useEffect(() => {
+        if (warehouses.length === 0 && selectedEmployee) {
+            const inventoryExists = isInventoryExists(selectedEmployee.inventoryId);
+            if (inventoryExists) {
+                getInventory(selectedEmployee.inventoryId);
+                warehouses.push(inventory);
+            }
+        }
+    }, [selectedEmployee, warehouses, inventory]);
+
+    // Handle input changes
     const handleInputChange = (event) => {
         const { id, value } = event.target;
         setFormData(prevState => ({ ...prevState, [id]: value }));
     };
 
+    // Handle select change for inventory
     const handleSelectChange = (event) => {
         const value = event.target.value;
         setFormData(prevState => ({ ...prevState, inventoryId: value }));
     };
 
+    // Handle form submit
     const handleSubmit = async () => {
         const hasEmptyField = Object.values(formData).some(value => value === "");
         if (hasEmptyField) {
@@ -193,6 +226,7 @@ function UpdateEmployeeModal({ selectedEmployee, warehouses, open, onClose }) {
 // Define PropTypes for the component
 UpdateEmployeeModal.propTypes = {
     selectedEmployee: PropTypes.shape({
+        id: PropTypes.string,
         lastName: PropTypes.string,
         firstName: PropTypes.string,
         city: PropTypes.string,
@@ -202,13 +236,12 @@ UpdateEmployeeModal.propTypes = {
         email: PropTypes.string,
         userName: PropTypes.string,
         role: PropTypes.string,
-        emailConfirmed: PropTypes.bool,
         inventoryId: PropTypes.number,
-        id: PropTypes.string
+        emailConfirmed: PropTypes.bool
     }),
+    warehouses: PropTypes.array,
     open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    warehouses: PropTypes.array.isRequired
+    onClose: PropTypes.func.isRequired
 };
 
 export default UpdateEmployeeModal;

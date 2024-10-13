@@ -27,7 +27,7 @@ namespace InventoryManagement.Server.Authorization.Services
             _unifiedContext = unifiedContext;
         }
 
-        public async Task<AuthResult> RegisterAsync(string email, string username, string password, string role)
+        public async Task<AuthResult> RegisterAsync(string email, string username, string password, string role, int inventoryId)
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
             if (existingUser != null)
@@ -45,7 +45,8 @@ namespace InventoryManagement.Server.Authorization.Services
             var newUser = new AppUser
             {
                 Email = email,
-                UserName = username
+                UserName = username,
+                InventoryId = inventoryId
             };
 
             var result = await _userManager.CreateAsync(newUser, password);

@@ -36,7 +36,7 @@ namespace InventoryManagement.Server.Authorization.Controller
                 return BadRequest("Invalid registration request");
             }
 
-            var result = await _authService.RegisterAsync(request.Email, request.Username, request.Password, request.Role);
+            var result = await _authService.RegisterAsync(request.Email, request.Username, request.Password, request.Role, request.InventoryId);
 
             if (!result.Success)
             {
