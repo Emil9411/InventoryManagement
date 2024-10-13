@@ -137,7 +137,7 @@ namespace InventoryManagement.Server.Controller
             return Ok(item);
         }
 
-        [HttpGet("{id}"), Authorize(Roles = "Admin, Manager")]
+        [HttpGet("{id}"), Authorize(Roles = "Admin, Manager, User")]
         public async Task<ActionResult<Inventory>> GetInventoryById(int id)
         {
             var inventory = await _inventoryRepo.GetInventoryByIdAsync(id);
