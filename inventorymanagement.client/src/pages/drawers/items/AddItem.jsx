@@ -504,7 +504,7 @@ function AddItem() {
                     <Grid item xs={12}>
                         <LoadingButton
                             fullWidth
-                            variant="contained"
+                            variant="outlined"
                             color="primary"
                             onClick={handleSubmit}
                             loading={isSubmitting}

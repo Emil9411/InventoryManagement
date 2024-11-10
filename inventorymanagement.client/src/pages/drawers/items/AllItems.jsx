@@ -156,8 +156,8 @@ function AllItems() {
                             <TableCell>{item.netPricePerKilogram}</TableCell>
                             <TableCell>{item.grossPricePerKilogram}</TableCell>
                             <TableCell>
-                                <Button variant="contained" color="primary" sx={{ marginRight: 1 }} startIcon={<EditIcon />}>Szerkesztés</Button>
-                                <Button variant="contained" color="error" startIcon={<DeleteForeverIcon />} onClick={() => deleteItem(item.id)}>Törlés</Button>
+                                <Button variant="outlined" color="primary" sx={{ marginRight: 1 }} startIcon={<EditIcon />}>Szerkesztés</Button>
+                                <Button variant="outlined" color="error" startIcon={<DeleteForeverIcon />} onClick={() => deleteItem(item.id)}>Törlés</Button>
                             </TableCell>
                         </TableRow>
                     ))}

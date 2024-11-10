@@ -120,10 +120,10 @@ function Warehouses() {
                                 <TableCell>{warehouse.items ? warehouse.items.length : 0}</TableCell>
                                 <TableCell>{warehouse.employees ? warehouse.employees.length : 0}</TableCell>
                                 <TableCell>
-                                    <Button variant="contained" color="primary" startIcon={<EditLocationAltIcon />} onClick={() => { setUpdateModalOpen(true); setUpdateModalWarehouse(warehouse); }}>Módosítás</Button>
+                                    <Button variant="outlined" color="primary" startIcon={<EditLocationAltIcon />} onClick={() => { setUpdateModalOpen(true); setUpdateModalWarehouse(warehouse); }}>Módosítás</Button>
                                 </TableCell>
                                 <TableCell>
-                                    <Button variant="contained" color="error" startIcon={<WrongLocationIcon />} onClick={() => handleDeleteWarehouse(warehouse)}>Törlés</Button>
+                                    <Button variant="outlined" color="error" startIcon={<WrongLocationIcon />} onClick={() => handleDeleteWarehouse(warehouse)}>Törlés</Button>
                                 </TableCell>
                             </TableRow>
                         ))}

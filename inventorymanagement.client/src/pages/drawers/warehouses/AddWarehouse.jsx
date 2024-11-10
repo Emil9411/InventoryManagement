@@ -159,7 +159,7 @@ function AddWarehouse() {
                             <LoadingButton
                                 fullWidth
                                 type="submit"
-                                variant="contained"
+                                variant="outlined"
                                 startIcon={<AddLocationAltIcon />}
                                 loading={loading}
                                 loadingPosition="start"
